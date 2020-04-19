@@ -19,6 +19,9 @@ export default {
     }
     axios.interceptors.response.use(undefined, function(err) {
       return new Promise(function() {
+        if (err.response) {
+          alert(err.response.data);
+        }
         if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
           // Если ошибка авторизации на сервере, выкинуть пользователя
           this.$store.dispatch("AUTH_LOGOUT");
@@ -27,6 +30,9 @@ export default {
         throw err;
       });
     });
+    if (!token && this.$route.path !== "/login") {
+      this.$router.push("/login");
+    }
   },
 };
 </script>

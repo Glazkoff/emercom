@@ -124,6 +124,7 @@ app.post('/api/register', (req, res) => {
 })
 
 app.post('/api/login', (req, res) => {
+  console.log('LOGIN', req.body);
   connection.query('SELECT * FROM `users` WHERE login = ?', [req.body.login], (err, result) => {
     if (err) {
       console.log(err);
@@ -131,23 +132,24 @@ app.post('/api/login', (req, res) => {
     } else {
       if (!result[0]) {
         res.status(404).send("Пользователь не найден")
-      }
-      let passwordIsValid = bcrypt.compareSync(req.body.password, result[0].password)
-      if (!passwordIsValid) {
-        return res.status(401).send({
-          token: null
-        })
       } else {
-        let token = jwt.sign({
-          id: result[0].user_id
-        }, CONFIG.SECRET, {
-          expiresIn: 86400 // токен на 24 часа 
-        })
-        res.status(200).send({
-          token,
-          fio: result[0].fio,
-          login: req.body.login
-        });
+        let passwordIsValid = bcrypt.compareSync(req.body.password, result[0].password)
+        if (!passwordIsValid) {
+          return res.status(401).send({
+            token: null
+          })
+        } else {
+          let token = jwt.sign({
+            id: result[0].user_id
+          }, CONFIG.SECRET, {
+            expiresIn: 86400 // токен на 24 часа 
+          })
+          res.status(200).send({
+            token,
+            fio: result[0].fio,
+            login: req.body.login
+          });
+        }
       }
 
     }

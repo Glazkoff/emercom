@@ -13,6 +13,7 @@
             type="text"
             name="login"
             id="login"
+            v-model="login"
             class="rounded-corners"
             placeholder="login"
             required
@@ -24,6 +25,7 @@
             type="password"
             name="password"
             id="password"
+            v-model="password"
             class="rounded-corners"
             placeholder="********"
             required
@@ -37,8 +39,6 @@
 </template>
 
 <script>
-import loginRoutine from "../shared/loginroutine";
-
 export default {
   name: "InForm",
   data() {
@@ -53,17 +53,17 @@ export default {
         login: this.login,
         password: this.password,
       };
-      loginRoutine(authData).then(() => {
-        this.$router.push("/main");
-      });
-      // this.$store.dispatch(AUTH_REQUEST, authData).then(() => {
-      //   this.$router.push("/main");
-      // });
+      try {
+        this.$store.dispatch("AUTH_REQUEST", authData).then(() => {
+          this.$router.push("/");
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
 </script>
-
 <style>
 .form-wrapper {
   display: flex;

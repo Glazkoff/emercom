@@ -8,7 +8,7 @@
     </div>
     <div class="nav-wrapper">
       <div class="link-wrapper">
-        <router-link to="main" class="nav-link"
+        <router-link to="/" class="nav-link"
           ><span class="nav-logo home"></span><span>Главная</span></router-link
         >
         <div class="white-spacer"></div>
@@ -58,7 +58,7 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch("AUTH_LOGOUT").then(() => {
-        this.$router.push("/");
+        this.$router.push("/login");
       });
     },
   },
