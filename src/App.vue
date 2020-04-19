@@ -5,12 +5,30 @@
   </div>
 </template>
 <script>
-import AdminPanel from '@/components/AdminPanel.vue'
+import axios from "axios";
+import AdminPanel from "@/components/AdminPanel.vue";
 export default {
   components: {
-    AdminPanel
-  }
-}
+    AdminPanel,
+  },
+  methods: {},
+  created() {
+    const token = localStorage.getItem("user-token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = token;
+    }
+    axios.interceptors.response.use(undefined, function(err) {
+      return new Promise(function() {
+        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+          // Если ошибка авторизации на сервере, выкинуть пользователя
+          this.$store.dispatch("AUTH_LOGOUT");
+          this.$router.push("/login");
+        }
+        throw err;
+      });
+    });
+  },
+};
 </script>
 <style>
 @font-face {

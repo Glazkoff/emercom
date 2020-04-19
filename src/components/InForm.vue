@@ -1,29 +1,67 @@
 <template>
-    <div class="centered-wrapper" id="entrance">
-        <div class="logo">
-          <div class="logo-img"></div>
-          <h1 class="logo-title">Система заявок<br>в IT-отдел</h1>
-          </div>
-        <div class="form-wrapper rounded-corners">
-            <h2 class="form-title">Войти в электронную<br>систему заявок</h2>
-            <form action="">
-                <label for="login">Логин<br>
-                    <input type="text" name="login" id="login" class="rounded-corners" placeholder="login">
-                </label>
-                <label for="password">Пароль<br>
-                    <input type="password" name="password" id="password" class="rounded-corners" placeholder="********">
-                </label>
-                <button class="rounded-corners">Войти</button>
-            </form>
-            <a >Не помню пароль</a>
-        </div>
+  <div class="centered-wrapper" id="entrance">
+    <div class="logo">
+      <div class="logo-img"></div>
+      <h1 class="logo-title">Система заявок<br />в IT-отдел</h1>
     </div>
+    <div class="form-wrapper rounded-corners">
+      <h2 class="form-title">Войти в электронную<br />систему заявок</h2>
+      <form action="POST" @submit.prevent>
+        <label for="login"
+          >Логин<br />
+          <input
+            type="text"
+            name="login"
+            id="login"
+            class="rounded-corners"
+            placeholder="login"
+            required
+          />
+        </label>
+        <label for="password"
+          >Пароль<br />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="rounded-corners"
+            placeholder="********"
+            required
+          />
+        </label>
+        <button class="rounded-corners" @click="tryAuth()">Войти</button>
+      </form>
+      <a>Не помню пароль</a>
+    </div>
+  </div>
 </template>
 
 <script>
+import loginRoutine from "../shared/loginroutine";
+
 export default {
-  name: 'InForm'
-}
+  name: "InForm",
+  data() {
+    return {
+      login: "",
+      password: "",
+    };
+  },
+  methods: {
+    tryAuth() {
+      const authData = {
+        login: this.login,
+        password: this.password,
+      };
+      loginRoutine(authData).then(() => {
+        this.$router.push("/main");
+      });
+      // this.$store.dispatch(AUTH_REQUEST, authData).then(() => {
+      //   this.$router.push("/main");
+      // });
+    },
+  },
+};
 </script>
 
 <style>
@@ -43,18 +81,18 @@ export default {
 .form-wrapper form {
   width: 96%;
 }
-.form-wrapper form label, .form-wrapper form button {
+.form-wrapper form label,
+.form-wrapper form button {
   width: 96%;
   border: 0px;
-
 }
 .form-wrapper form button {
-    padding: 15px;
-    background-color: #464646;
-    color: #fff;
-    font-family: 'Montserrat Regular';
-    font-size: 1rem;
-    cursor: pointer;
+  padding: 15px;
+  background-color: #464646;
+  color: #fff;
+  font-family: "Montserrat Regular";
+  font-size: 1rem;
+  cursor: pointer;
 }
 .form-wrapper form label input {
   width: 100%;
@@ -62,10 +100,10 @@ export default {
   padding: 15px 15px;
   box-sizing: border-box;
   text-align: center;
-  font-family: 'Montserrat Regular';
+  font-family: "Montserrat Regular";
   font-size: 1rem;
 }
-.form-wrapper a{
+.form-wrapper a {
   text-decoration: underline;
   cursor: pointer;
   margin-top: 1rem;
@@ -93,7 +131,7 @@ form {
 .logo-img {
   height: 60px;
   width: 60px;
-  background: url('../assets/logo.svg');
+  background: url("../assets/logo.svg");
   background-size: contain;
 }
 .logo-title {

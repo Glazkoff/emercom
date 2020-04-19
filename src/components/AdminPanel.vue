@@ -2,8 +2,8 @@
   <div id="admin-panel-wrap">
     <div id="admin-panel" v-if="isAdmin">
       <h5>Админпанель</h5>
-      <router-link to="/">Home</router-link>
-      <router-link to="/main">Main</router-link>
+      <router-link to="/">Main</router-link>
+      <router-link to="/login">Login</router-link>
       <router-link to="/about">About</router-link>
     </div>
     <button
