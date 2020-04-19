@@ -35,7 +35,7 @@ export default new Vuex.Store({
         // Promise используется для редиректа при входе в систему
         context.commit("AUTH_REQUEST");
         axios({
-            url: "auth",
+            url: "http://localhost:8080/api/login",
             data: user,
             method: "POST"
           })
