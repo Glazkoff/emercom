@@ -54,9 +54,14 @@ export default {
         password: this.password,
       };
       try {
-        this.$store.dispatch("AUTH_REQUEST", authData).then(() => {
-          this.$router.push("/");
-        });
+        this.$store.dispatch("AUTH_REQUEST", authData).then(
+          () => {
+            this.$router.push("/");
+          },
+          (err) => {
+            console.log("InFrom. Error: ", err);
+          }
+        );
       } catch (error) {
         console.log(error);
       }

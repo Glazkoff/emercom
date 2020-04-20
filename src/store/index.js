@@ -46,9 +46,9 @@ export default new Vuex.Store({
               localStorage.setItem("user-token", token); // сохранить токен в localstorage
               context.commit("AUTH_SUCCESS", token);
               resolve(resp);
-            })
-            .catch((error) => {
-              console.log("ОШИБКА СЕРВЕРА");
+            }, error => {
+              // вторая функция - запустится при вызове reject
+              console.log("Rejected: " + error);
               if (error.response) {
                 console.log(error.response.data);
                 console.log(error.response.status);
@@ -65,11 +65,35 @@ export default new Vuex.Store({
               context.commit("AUTH_ERROR");
               localStorage.removeItem("user-token"); // если запрос ошибочен, удаление токена в localstorage при возможности
               reject(error);
-            });
-        });
+              // reject(error);
+            })
+            .catch((error) => {
+              console.log("ОШИБКА СЕРВЕРА");
+              console.log(error);
+              //   if (error.response) {
+              //     console.log(error.response.data);
+              //     console.log(error.response.status);
+              //     console.log(error.response.headers);
+              //     console.log(error.response)
+              //     console.log(`Ошибка сервера ${error.response.status} при ответе`);
+              //   } else if (error.request) {
+              //     console.log(`Ошибка сервера ${error.request.status} при запросе`);
+              //     console.log(error.request);
+              //   } else {
+              //     console.log('Error', error.message);
+              //   }
+              //   console.log(error.config);
+              //   context.commit("AUTH_ERROR");
+              //   localStorage.removeItem("user-token"); // если запрос ошибочен, удаление токена в localstorage при возможности
+              //   reject(error);
+              // });
+            })
+        })
         return prom;
       } catch (e) {
+        //   Promise.reject(e)
         console.log(e);
+        //   throw new Error("o_O");
       }
     },
     AUTH_LOGOUT: (context) => {

@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+// import axios from "axios";
 import AdminPanel from "@/components/AdminPanel.vue";
 export default {
   components: {
@@ -15,12 +15,12 @@ export default {
   created() {
     const token = localStorage.getItem("user-token");
     if (token) {
-      axios.defaults.headers.common["Authorization"] = token;
+      this.$http.defaults.headers.common["Authorization"] = token;
     }
-    axios.interceptors.response.use(undefined, function(err) {
+    this.$http.interceptors.response.use(undefined, function(err) {
       return new Promise(function() {
         if (err.response) {
-          alert(err.response.data);
+          // alert(err.response.data);
         }
         if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
           // Если ошибка авторизации на сервере, выкинуть пользователя
@@ -79,9 +79,6 @@ body {
   display: flex;
   justify-content: flex-start;
 }
-/* #admin-panel h5 {
-    margin-right: 10px;
-  } */
 #admin-panel * {
   display: block;
   max-height: 30px;
