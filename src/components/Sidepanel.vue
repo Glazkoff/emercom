@@ -8,7 +8,7 @@
     </div>
     <div class="nav-wrapper">
       <div class="link-wrapper">
-        <router-link to="/" class="nav-link"
+        <router-link to="/" class="nav-link" exact
           ><span class="nav-logo home"></span><span>Главная</span></router-link
         >
         <div class="white-spacer"></div>
