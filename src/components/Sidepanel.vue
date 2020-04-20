@@ -1,38 +1,68 @@
 <template>
-    <div id="side-panel">
-      <div class="logo">
-          <div class="logo-img"></div>
-          <router-link tag="h1" class="logo-title" to="main">Система заявок<br>в IT-отдел</router-link>
+  <div id="side-panel">
+    <div class="logo">
+      <div class="logo-img"></div>
+      <router-link tag="h1" class="logo-title" to="main"
+        >Система заявок<br />в IT-отдел</router-link
+      >
+    </div>
+    <div class="nav-wrapper">
+      <div class="link-wrapper">
+        <router-link to="/" class="nav-link"
+          ><span class="nav-logo home"></span><span>Главная</span></router-link
+        >
+        <div class="white-spacer"></div>
       </div>
-      <div class="nav-wrapper">
-        <div class="link-wrapper">
-          <router-link to="main" class="nav-link" ><span class="nav-logo home"></span><span>Главная</span></router-link>
-          <div class="white-spacer"></div>
-        </div>
-        <div class="link-wrapper">
-        <router-link to="write" class="nav-link "><span class="nav-logo pen"></span><span>Написать<br>заявку</span></router-link>
+      <div class="link-wrapper">
+        <router-link to="write" class="nav-link "
+          ><span class="nav-logo pen"></span
+          ><span>Написать<br />заявку</span></router-link
+        >
         <div class="white-spacer"></div>
-        </div>
-        <div class="link-wrapper">
-        <router-link to="list" class="nav-link"><span class="nav-logo list"></span><span>Ваши заявки</span></router-link>
+      </div>
+      <div class="link-wrapper">
+        <router-link to="list" class="nav-link"
+          ><span class="nav-logo list"></span
+          ><span>Ваши заявки</span></router-link
+        >
         <div class="white-spacer"></div>
-        </div>
-        <div class="link-wrapper">
-        <router-link to="history" class="nav-link"><span class="nav-logo time"></span><span>История<br>оповещений</span></router-link>
+      </div>
+      <div class="link-wrapper">
+        <router-link to="history" class="nav-link"
+          ><span class="nav-logo time"></span
+          ><span>История<br />оповещений</span></router-link
+        >
         <div class="white-spacer"></div>
-        </div>
-        <div class="link-wrapper">
-        <router-link to="chat" class="nav-link"><span class="nav-logo chat"></span><span>Чат с<br>IT-специалистом</span></router-link>
+      </div>
+      <div class="link-wrapper">
+        <router-link to="chat" class="nav-link"
+          ><span class="nav-logo chat"></span
+          ><span>Чат с<br />IT-специалистом</span></router-link
+        >
         <div class="white-spacer"></div>
-        </div>
+      </div>
+      <div class="link-wrapper">
+        <!-- <router-link exact="true" to="/" class="nav-link"
+          ><span class="nav-logo "></span><span>Выйти</span></router-link
+        >
+        <div class="white-spacer"></div> -->
+        <button @click="logout()">Выйти</button>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'Sidepanel'
-}
+  name: "Sidepanel",
+  methods: {
+    logout() {
+      this.$store.dispatch("AUTH_LOGOUT").then(() => {
+        this.$router.push("/login");
+      });
+    },
+  },
+};
 </script>
 
 <style>
@@ -59,7 +89,7 @@ export default {
   align-content: center;
   padding: 20px;
   box-sizing: border-box;
-  border-top-left-radius:calc(2.2rem);
+  border-top-left-radius: calc(2.2rem);
   border-bottom-left-radius: calc(2.2rem);
   border-bottom-right-radius: 0px;
   border-top-right-radius: 0px;
@@ -70,9 +100,10 @@ export default {
 .nav-link.router-link-active {
   background-color: #fff;
 }
-.nav-link.router-link-active::before, .nav-link.router-link-active::after {
+.nav-link.router-link-active::before,
+.nav-link.router-link-active::after {
   display: block;
-  content: '';
+  content: "";
   border-radius: 30px;
   height: calc(100%);
   width: 60px;
@@ -108,27 +139,27 @@ export default {
   margin: auto 10px;
 }
 .home {
-  background: url('../assets/home.svg') no-repeat;
+  background: url("../assets/home.svg") no-repeat;
   background-size: contain;
 }
 .pen {
-  background: url('../assets/pen.svg') no-repeat;
+  background: url("../assets/pen.svg") no-repeat;
   background-size: contain;
 }
 .time {
-  background: url('../assets/time.svg') no-repeat;
+  background: url("../assets/time.svg") no-repeat;
   background-size: contain;
 }
 .list {
-  background: url('../assets/list.svg') no-repeat;
+  background: url("../assets/list.svg") no-repeat;
   background-size: contain;
 }
 .chat {
-  background: url('../assets/chat.svg') no-repeat;
+  background: url("../assets/chat.svg") no-repeat;
   background-size: contain;
 }
 .cross {
-  background: url('../assets/cross.svg') no-repeat;
+  background: url("../assets/cross.svg") no-repeat;
   background-size: contain;
   height: 16px;
   margin-left: 0px;
