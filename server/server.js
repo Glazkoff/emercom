@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 // Парсинг запросов по типу: application/x-www-form-urlencoded
 app.use(
   express.urlencoded({
-    extended: true,
+    extended: true
   })
 );
 
@@ -44,10 +44,10 @@ const connection = mysql.createConnection({
   user: dbConfig.USER,
   password: dbConfig.PASSWORD,
   database: dbConfig.DB,
-  charset: "utf8_general_ci",
+  charset: "utf8_general_ci"
 });
 try {
-  connection.connect((err) => {
+  connection.connect(err => {
     if (err) {
       console.warn(err);
     } else {
@@ -162,10 +162,129 @@ app.post("/api/login", (req, res) => {
       }
     );
 });
+
+//CRUD: requests
+app.post("/api/requests", (req, res) => {
+  if (connection) {
+    try {
+      connection.query(
+        "INSERT INTO `requests` ('status', 'user_id', 'department_id', 'executor_id', 'content') VALUES (?, ?, ?, ?, ?)",
+        [
+          req.body.status,
+          req.body.user_id,
+          req.body.department_id,
+          req.body.executor_id,
+          req.body.content
+        ],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            res.status(500).send("Ошибка на сервере");
+          } else {
+            console.log("Результат запроса к БД:");
+            console.log(result);
+            res.send(result);
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+});
+
+app.get("/api/requests", (req, res) => {
+  if (connection) {
+    console.log("GET");
+    try {
+      connection.query("SELECT * FROM `requests`", (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send("Ошибка на сервере");
+        } else {
+          console.log("Результат запроса к БД:");
+          console.log(result);
+          res.json(result);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+});
+
+// TODO: add put requests
+// app.put("/api/requests", (req, res) => { });
+
+// TODO: add delete requests
+// app.delete("/api/requests", (req, res) => { });
+
+
+// CRUD: messages
+app.post("/api/messages", (req, res) => {
+  if (connection) {
+    try {
+      connection.query(
+        "INSERT INTO `messages` ('title', 'body', 'from_user_id', 'destination_id', 'type') VALUES (?, ?, ?, ?, ?)",
+        [
+          req.body.title,
+          req.body.body,
+          req.body.fromid,
+          req.body.toid,
+          req.body.status
+        ],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            res.status(500).send("Ошибка на сервере");
+          } else {
+            console.log("Результат запроса к БД:");
+            console.log(result);
+            res.send(result);
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+});
+
+app.get("/api/messages", (req, res) => {
+  if (connection) {
+    console.log("GET");
+    try {
+      connection.query("SELECT * FROM `messages`", (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send("Ошибка на сервере");
+        } else {
+          console.log("Результат запроса к БД:");
+          console.log(result);
+          res.json(result);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+});
+
+// TODO: add put messages
+// app.put("/api/messages", (req, res) => { });
+
+// TODO: add delete messages
+// app.delete("/api/messages", (req, res) => { });
+
 app.get("/test", (req, res) => {
   console.log(req.headers);
   if (req.headers["authorization"]) {
-    let decode = jwt.verify(req.headers["authorization"], CONFIG.SECRET);
+    let decode;
+    try {
+      decode = jwt.verify(req.headers["authorization"], CONFIG.SECRET);
+    } catch (err) {
+      console.log(err);
+    }
     console.log(decode);
     res.status(200).send({
       id: decode.id

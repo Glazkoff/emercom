@@ -119,6 +119,9 @@ export default {
 .nav-link:visited {
   color: #000;
 }
+.nav-link span {
+  z-index: 200;
+}
 .link-wrapper {
   position: relative;
 }

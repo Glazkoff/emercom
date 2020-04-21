@@ -5,45 +5,14 @@
       <div class="col">
         <h2>Оповещения</h2>
         <div class="info-block scroll-bar rounded-corners">
-          <div class="message-box rounded-corners">
-            <h4>08.02.2020, 13:45</h4>
-            <h3>Общий сбор</h3>
-            <p>
-              В главном штабе будет собрание. Быть всем! Текст, текст. Текст,
-              текст.
-            </p>
-          </div>
-          <div class="message-box rounded-corners">
-            <h4>08.02.2020, 13:45</h4>
-            <h3>Общий сбор</h3>
-            <p>
-              В главном штабе будет собрание. Быть всем! Текст, текст. Текст,
-              текст.
-            </p>
-          </div>
-          <div class="message-box rounded-corners">
-            <h4>08.02.2020, 13:45</h4>
-            <h3>Общий сбор</h3>
-            <p>
-              В главном штабе будет собрание. Быть всем! Текст, текст. Текст,
-              текст.
-            </p>
-          </div>
-          <div class="message-box rounded-corners">
-            <h4>08.02.2020, 13:45</h4>
-            <h3>Общий сбор</h3>
-            <p>
-              В главном штабе будет собрание. Быть всем! Текст, текст. Текст,
-              текст.
-            </p>
-          </div>
-          <div class="message-box rounded-corners">
-            <h4>08.02.2020, 13:45</h4>
-            <h3>Общий сбор</h3>
-            <p>
-              В главном штабе будет собрание. Быть всем! Текст, текст. Текст,
-              текст.
-            </p>
+          <div
+            class="message-box rounded-corners"
+            :key="message.message_id"
+            v-for="message in messages"
+          >
+            <h4>{{ message.timestamp }}</h4>
+            <h3>{{ message.title }}</h3>
+            <p>{{ message.body }}</p>
           </div>
         </div>
         <div class="bottom-btn">
@@ -94,6 +63,11 @@ export default {
   components: {
     Sidepanel,
   },
+  data() {
+    return {
+      messages: [],
+    };
+  },
   beforeMount() {
     const token = localStorage.getItem("user-token");
     if (token) {
@@ -101,9 +75,19 @@ export default {
     }
   },
   mounted() {
-    axios.get("http://localhost:8080/test").then(
+    // axios.get("http://localhost:8080/test").then(
+    //   (res) => {
+    //     console.log(res);
+    //   },
+    //   (err) => {
+    //     console.log("Main. Error: ", err);
+    //   }
+    // );
+    axios.get("http://localhost:8080/api/messages").then(
       (res) => {
-        console.log(res);
+        res.data.forEach((el) => {
+          this.messages.push(el);
+        });
       },
       (err) => {
         console.log("Main. Error: ", err);
