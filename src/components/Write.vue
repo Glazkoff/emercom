@@ -8,112 +8,102 @@
           <h3>Новая заявка</h3>
           <div class="input-form">
             <label for="fio">ФИО</label>
-            <input type="text" id="fio" placeholder="Фамилия Имя Отчество" />
+            <input
+              type="text"
+              id="fio"
+              placeholder="Фамилия Имя Отчество"
+              v-model="fio"
+              disabled
+            />
             <small>Добавлено автоматически</small>
           </div>
           <div class="input-form">
             <label for="departmentid">Номер отдела</label>
-            <input type="text" id="departmentid" placeholder="129301" />
+            <input
+              type="text"
+              id="departmentid"
+              placeholder="129301"
+              v-model="department_id"
+              disabled
+            />
             <small>Добавлено автоматически</small>
           </div>
           <div class="technical-service">
             <label for="">Устройства для тех.обслуживания</label>
-            <div class="devices-wrap">
+            <div
+              class="devices-wrap"
+              v-for="(device, index) in checked_devices"
+              :key="index"
+            >
               <div class="devices-block">
-                <div class="device-title">МФУ #512383</div>
+                <div class="device-title">{{ device.name }}</div>
                 <div class="device-characteristics">
                   <div class="characteristics-title">Характеристики</div>
                   <div class="characteristics-text">
-                    Текст, текст, текст, текст. Текст, текст, текст, текст.
+                    {{ device.characteristics }}
                   </div>
                 </div>
                 <div class="input-form">
                   <label for="servicetype">Тип обслуживания</label>
-                  <select name="servicetype" id="servicetype">
-                    <option value="">Заправка картриджа</option>
-                    <option value="">Обслуживание</option>
-                    <option value="">Устранение неполадок</option>
+                  <select
+                    name="servicetype"
+                    id="servicetype"
+                    v-model="checked_service[index]"
+                  >
+                    <option
+                      :value="type.type"
+                      v-for="(type, count) in device.types"
+                      :key="count"
+                      >{{ type.description }}</option
+                    >
                   </select>
                   <!-- <small>Добавлено автоматически</small> -->
                 </div>
                 <div class="input-form">
                   <label>Комментарий для специалиста</label>
-                  <textarea name="" placeholder="Ваш комментарий к устройству">
+                  <textarea
+                    name=""
+                    placeholder="Ваш комментарий к устройству"
+                    v-model="device.comment"
+                  >
                   </textarea>
                   <!-- <small>Добавлено автоматически</small> -->
                 </div>
               </div>
+              <button @click="deleteFromChecked(index)">&times;</button>
             </div>
           </div>
           <div class="input-form">
             <label for="departmentid">Общий комментарий</label>
-            <textarea name="" placeholder="Ваш комментарий к заявке">
+            <textarea
+              name=""
+              placeholder="Ваш комментарий к заявке"
+              v-model="common_comment"
+            >
             </textarea>
             <!-- <small>Добавлено автоматически</small> -->
           </div>
           <div class="input-form">
+            <small>В заявке указан 1 пункт</small><br />
             <button>Отправить</button>
           </div>
         </div>
         <div class="request-side">
           <div class="devices-list-wrap">
             <button>Добавить устройство</button>
-            <div class="devices-list-block">
-              <button class="list-btn">Добавить в заявку</button>
+            <div
+              class="devices-list-block"
+              v-for="(depdevice, index) in department_devices"
+              :key="index"
+            >
+              <button class="list-btn" @click="addToChecked(index)">
+                Добавить в заявку
+              </button>
               <div class="list-data">
-                <div class="data-title">ПК #512385</div>
+                <div class="data-title">{{ depdevice.name }}</div>
                 <div class="data-description">
-                  <strong>Описание</strong>:<br />
-                  Текст, текст, текст, текст. Текст, текст, текст, текст. Текст,
-                  текст, текст, текст. Текст, текст, текст, текст.
-                </div>
-              </div>
-            </div>
-            <div class="devices-list-block">
-              <button class="list-btn">Добавить в заявку</button>
-              <div class="list-data">
-                <div class="data-title">ПК #512385</div>
-                <div class="data-description">
-                  <strong>Описание</strong>:<br />
-                  Текст, текст, текст, текст. Текст, текст, текст, текст. Текст,
-                  текст, текст, текст. Текст, текст, текст, текст. Текст, текст,
-                  текст, текст. Текст, текст, текст, текст. Текст, текст, текст,
-                  текст. Текст, текст, текст, текст. Текст, текст, текст, текст.
-                  Текст, текст, текст, текст. Текст, текст, текст, текст. Текст,
-                  текст, текст, текст.
-                </div>
-              </div>
-            </div>
-            <div class="devices-list-block">
-              <button class="list-btn">Добавить в заявку</button>
-              <div class="list-data">
-                <div class="data-title">ПК #512385</div>
-                <div class="data-description">
-                  <strong>Описание</strong>:<br />
-                  Текст, текст, текст, текст. Текст, текст, текст, текст. Текст,
-                  текст, текст, текст. Текст, текст, текст, текст.
-                </div>
-              </div>
-            </div>
-            <div class="devices-list-block">
-              <button class="list-btn">Добавить в заявку</button>
-              <div class="list-data">
-                <div class="data-title">ПК #512385</div>
-                <div class="data-description">
-                  <strong>Описание</strong>:<br />
-                  Текст, текст, текст, текст. Текст, текст, текст, текст. Текст,
-                  текст, текст, текст. Текст, текст, текст, текст.
-                </div>
-              </div>
-            </div>
-            <div class="devices-list-block">
-              <button class="list-btn">Добавить в заявку</button>
-              <div class="list-data">
-                <div class="data-title">ПК #512385</div>
-                <div class="data-description">
-                  <strong>Описание</strong>:<br />
-                  Текст, текст, текст, текст. Текст, текст, текст, текст. Текст,
-                  текст, текст, текст. Текст, текст, текст, текст.
+                  <strong>Характеристики</strong>:<br />
+                  {{ depdevice.characteristics }}
                 </div>
               </div>
             </div>
@@ -128,8 +118,98 @@
 import Sidepanel from "@/components/Sidepanel.vue";
 export default {
   name: "Write",
+  data() {
+    return {
+      fio: "",
+      department_id: -1,
+      department_devices: [
+        {
+          name: "ПК #112233",
+          characteristics:
+            "Текст, текст, текст, текст. Текст, текст, текст, текст.",
+          types: [
+            {
+              type: 0,
+              description: "Установка Windows",
+            },
+            {
+              type: 1,
+              description: "Обслуживание",
+              checked: true,
+            },
+            {
+              type: 2,
+              description: "Устранение неполадок",
+            },
+          ],
+          comment: "Комментарий к устройству",
+        },
+      ],
+      checked_service: [],
+      checked_devices: [
+        {
+          name: "МФУ #512383",
+          characteristics:
+            "Текст, текст, текст, текст. Текст, текст, текст, текст.",
+          types: [
+            {
+              type: 0,
+              description: "Заправка картриджа",
+            },
+            {
+              type: 1,
+              description: "Обслуживание",
+              checked: true,
+            },
+            {
+              type: 2,
+              description: "Устранение неполадок",
+            },
+          ],
+          comment: "Комментарий к устройству",
+        },
+        {
+          name: "МФУ #512384",
+          characteristics:
+            "Текст, текст, текст, текст. Текст, текст, текст, текст.",
+          types: [
+            {
+              type: 0,
+              description: "Заправка картриджа",
+            },
+            {
+              type: 1,
+              description: "Обслуживание",
+              checked: true,
+            },
+            {
+              type: 2,
+              description: "Устранение неполадок",
+            },
+          ],
+          comment: "Комментарий к устройству",
+        },
+      ],
+      common_comment: "",
+    };
+  },
+  methods: {
+    addToChecked(index) {
+      console.log(index);
+      this.checked_devices.push(this.department_devices[index]);
+      this.department_devices.splice(index, 1);
+    },
+    deleteFromChecked(index) {
+      this.department_devices.push(this.checked_devices[index]);
+      this.checked_devices.splice(index, 1);
+    },
+  },
   components: {
     Sidepanel,
+  },
+  mounted() {
+    this.fio = localStorage.getItem("fio");
+    this.department_id = localStorage.getItem("department-id");
   },
 };
 </script>
@@ -205,6 +285,7 @@ button {
   box-sizing: border-box;
   background-color: #f2f2f2;
   padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
 }
 .devices-wrap .input-form {
   margin-left: 0rem;

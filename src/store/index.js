@@ -42,8 +42,11 @@ export default new Vuex.Store({
               method: "POST"
             })
             .then((resp) => {
+              console.log(resp.data);
               const token = resp.data.token;
               localStorage.setItem("user-token", token); // сохранить токен в localstorage
+              localStorage.setItem("department-id", resp.data.department_id); // сохранить ID отдела в localstorage
+              localStorage.setItem("fio", resp.data.fio); // сохранить ФИО в localstorage
               context.commit("AUTH_SUCCESS", token);
               resolve(resp);
             }, error => {
@@ -100,6 +103,8 @@ export default new Vuex.Store({
       return new Promise((resolve) => {
         context.commit("AUTH_LOGOUT");
         localStorage.removeItem("user-token"); // удаляем токен из localstorage
+        localStorage.removeItem("department-id"); // удаляем ID отдела из localstorage
+        localStorage.removeItem("fio"); // удаляем ФИО из localstorage
         delete axios.defaults.headers.common["Authorization"];
         resolve();
       });

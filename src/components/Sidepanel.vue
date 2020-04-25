@@ -46,7 +46,7 @@
           ><span class="nav-logo "></span><span>Выйти</span></router-link
         >
         <div class="white-spacer"></div> -->
-        <button @click="logout()">Выйти</button>
+        <button @click="logout()" class="logout-btn"><span>Выйти</span></button>
       </div>
     </div>
   </div>
@@ -83,7 +83,9 @@ export default {
   font-size: 1.1rem;
   cursor: pointer;
 }
-.nav-link {
+
+.nav-link,
+.logout-btn {
   display: block;
   display: flex;
   align-content: center;
@@ -96,6 +98,19 @@ export default {
   margin-left: 10px;
   position: relative;
   text-decoration: none;
+}
+.logout-btn {
+  border: none;
+  font-family: "Montserrat Medium";
+  background-color: transparent;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  border-top: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 0;
+  margin-left: 0;
+  margin-top: 2rem;
+  font-size: 0.9rem;
 }
 .nav-link.router-link-active {
   background-color: #fff;

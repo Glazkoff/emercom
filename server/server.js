@@ -26,7 +26,7 @@ app.use(
 app.use("/", serveStatic(path.join(__dirname, "../dist")));
 
 // настройка CORS
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
@@ -101,8 +101,8 @@ let salt = bcrypt.genSaltSync(10);
 /********************************************* */
 
 // Обработка запросов протокола WebSockets
-app.ws("/ws", function(ws, req) {
-  ws.on("message", function(msg) {
+app.ws("/ws", function (ws, req) {
+  ws.on("message", function (msg) {
     console.log(ws);
     console.log("WS:", msg);
     ws.send(msg);
@@ -142,12 +142,10 @@ app.post("/api/register", (req, res) => {
               return res.status(500).send("Проблема получении пользователя");
             } else {
               console.log(reslt);
-              let token = jwt.sign(
-                {
+              let token = jwt.sign({
                   id: reslt.insertId,
                 },
-                CONFIG.SECRET,
-                {
+                CONFIG.SECRET, {
                   expiresIn: 86400, // токен на 24 часа
                 }
               );
@@ -188,12 +186,10 @@ app.post("/api/login", (req, res) => {
               token: null,
             });
           } else {
-            let token = jwt.sign(
-              {
+            let token = jwt.sign({
                 id: result[0].user_id,
               },
-              CONFIG.SECRET,
-              {
+              CONFIG.SECRET, {
                 expiresIn: 86400, // токен на 24 часа
               }
             );
@@ -201,6 +197,7 @@ app.post("/api/login", (req, res) => {
               token,
               fio: result[0].fio,
               login: req.body.login,
+              department_id: result[0].department_id
             });
           }
         }
