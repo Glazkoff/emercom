@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 // Парсинг запросов по типу: application/x-www-form-urlencoded
 app.use(
   express.urlencoded({
-    extended: true,
+    extended: true
   })
 );
 
@@ -54,7 +54,7 @@ const pool = mysql.createPool({
   user: dbConfig.USER,
   password: dbConfig.PASSWORD,
   database: dbConfig.DB,
-  charset: "utf8_general_ci",
+  charset: "utf8_general_ci"
 });
 
 pool.getConnection((err, connection) => {
@@ -143,16 +143,16 @@ app.post("/api/register", (req, res) => {
             } else {
               console.log(reslt);
               let token = jwt.sign({
-                  id: reslt.insertId,
+                  id: reslt.insertId
                 },
                 CONFIG.SECRET, {
-                  expiresIn: 86400, // токен на 24 часа
+                  expiresIn: 86400 // токен на 24 часа
                 }
               );
               res.status(200).send({
                 token,
                 fio: reslt[0].fio,
-                login: login,
+                login: login
               });
             }
           }
@@ -183,21 +183,22 @@ app.post("/api/login", (req, res) => {
           );
           if (!passwordIsValid) {
             return res.status(401).send({
-              token: null,
+              token: null
             });
           } else {
             let token = jwt.sign({
-                id: result[0].user_id,
+                id: result[0].user_id
               },
               CONFIG.SECRET, {
-                expiresIn: 86400, // токен на 24 часа
+                expiresIn: 86400 // токен на 24 часа
               }
             );
             res.status(200).send({
               token,
               fio: result[0].fio,
               login: req.body.login,
-              department_id: result[0].department_id
+              department_id: result[0].department_id,
+              user_id: result[0].user_id
             });
           }
         }
@@ -208,16 +209,16 @@ app.post("/api/login", (req, res) => {
 
 //CRUD: requests
 app.post("/api/requests", (req, res) => {
-  // if (connection) {
+  console.log(req.body);
   try {
     pool.query(
-      "INSERT INTO `requests` ('status', 'user_id', 'department_id', 'executor_id', 'content') VALUES (?, ?, ?, ?, ?)",
+      "INSERT INTO `requests` ( `status`, `user_id`, `department_id`, `content`, `comment` ) VALUES (?, ?, ?, ?, ?)",
       [
-        req.body.status,
+        "На рассмотрении",
         req.body.user_id,
         req.body.department_id,
-        req.body.executor_id,
-        req.body.content,
+        JSON.stringify(req.body.checked_devices),
+        req.body.common_comment
       ],
       (err, result) => {
         if (err) {
@@ -233,7 +234,6 @@ app.post("/api/requests", (req, res) => {
   } catch (error) {
     console.log(error);
   }
-  // }
 });
 
 app.get("/api/requests", (req, res) => {
@@ -273,7 +273,7 @@ app.post("/api/messages", (req, res) => {
         req.body.body,
         req.body.fromid,
         req.body.toid,
-        req.body.status,
+        req.body.status
       ],
       (err, result) => {
         if (err) {
@@ -329,7 +329,7 @@ app.get("/test", (req, res) => {
     }
     console.log(decode);
     res.status(200).send({
-      id: decode.id,
+      id: decode.id
     });
   } else {
     res.status(401).send("Токен не найден!");

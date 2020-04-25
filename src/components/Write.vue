@@ -3,7 +3,23 @@
     <Sidepanel></Sidepanel>
     <div class="main-panel">
       <h2>Общие и личные оповещения</h2>
-      <div class="request-wrap">
+      <div class="push push-success" v-if="success">
+        <h3>Успех!</h3>
+        <p>
+          Заявка успешно отправлена. Вы можете отправить ещё одну или
+          просмотреть весь список своих заявок
+        </p>
+        <div class="btn-row">
+          <button @click="newRequest()">Отправить ещё одну</button>
+          <router-link to="list" tag="button"
+            >Просмотреть весь список</router-link
+          >
+        </div>
+      </div>
+      <div class="request-main" v-else-if="error">
+        <h3>Ошибка</h3>
+      </div>
+      <div class="request-wrap" v-else-if="!success && !error">
         <div class="request-main">
           <h3>Новая заявка</h3>
           <div class="input-form">
@@ -30,6 +46,9 @@
           </div>
           <div class="technical-service">
             <label for="">Устройства для тех.обслуживания</label>
+            <div class="devices-wrap" v-if="checked_devices.length === 0">
+              Добавьте устройство из списка справа
+            </div>
             <div
               class="devices-wrap"
               v-for="(device, index) in checked_devices"
@@ -70,7 +89,9 @@
                   <!-- <small>Добавлено автоматически</small> -->
                 </div>
               </div>
-              <button @click="deleteFromChecked(index)">&times;</button>
+              <button class="deleteBtn" @click="deleteFromChecked(index)">
+                &times;
+              </button>
             </div>
           </div>
           <div class="input-form">
@@ -84,13 +105,16 @@
             <!-- <small>Добавлено автоматически</small> -->
           </div>
           <div class="input-form">
-            <small>В заявке указан 1 пункт</small><br />
-            <button>Отправить</button>
+            <small
+              >В заявке указано пунктов:
+              <strong>{{ checked_devices.length }}</strong> </small
+            ><br />
+            <button @click="sendRequest()">Отправить</button>
           </div>
         </div>
         <div class="request-side">
           <div class="devices-list-wrap">
-            <button>Добавить устройство</button>
+            <button disabled>Добавить устройство</button>
             <div
               class="devices-list-block"
               v-for="(depdevice, index) in department_devices"
@@ -116,10 +140,13 @@
 
 <script>
 import Sidepanel from "@/components/Sidepanel.vue";
+import axios from "axios";
 export default {
   name: "Write",
   data() {
     return {
+      success: false,
+      error: false,
       fio: "",
       department_id: -1,
       department_devices: [
@@ -144,9 +171,6 @@ export default {
           ],
           comment: "Комментарий к устройству",
         },
-      ],
-      checked_service: [],
-      checked_devices: [
         {
           name: "МФУ #512383",
           characteristics:
@@ -159,7 +183,6 @@ export default {
             {
               type: 1,
               description: "Обслуживание",
-              checked: true,
             },
             {
               type: 2,
@@ -180,7 +203,6 @@ export default {
             {
               type: 1,
               description: "Обслуживание",
-              checked: true,
             },
             {
               type: 2,
@@ -190,18 +212,60 @@ export default {
           comment: "Комментарий к устройству",
         },
       ],
+      checked_service: [],
+      checked_devices: [],
       common_comment: "",
     };
   },
   methods: {
     addToChecked(index) {
-      console.log(index);
+      this.checked_service[index] = 0;
       this.checked_devices.push(this.department_devices[index]);
       this.department_devices.splice(index, 1);
     },
     deleteFromChecked(index) {
+      this.checked_service.splice(index, 1);
       this.department_devices.push(this.checked_devices[index]);
       this.checked_devices.splice(index, 1);
+    },
+    sendRequest() {
+      const req = {
+        user_id: localStorage.getItem("user-id"),
+        fio: this.fio,
+        department_id: this.department_id,
+        checked_devices: this.checked_devices,
+        common_comment: this.common_comment,
+      };
+      for (let index = 0; index < this.checked_devices.length; index++) {
+        this.checked_devices[index].types.map((el) => {
+          if (this.checked_service[index] === el.type) {
+            el.checked = true;
+            return el;
+          } else {
+            el.checked = false;
+            return el;
+          }
+        });
+      }
+      axios.post("http://localhost:8080/api/requests", req).then(
+        (res) => {
+          console.log(res);
+          if (res.status == 200) {
+            this.success = true;
+          }
+        },
+        (err) => {
+          console.log("Write. Error: ", err);
+        }
+      );
+      console.log(JSON.stringify(req));
+    },
+    newRequest() {
+      this.checked_service = [];
+      this.success = false;
+      this.error = false;
+      this.checked_devices = [];
+      this.common_comment = "";
     },
   },
   components: {
@@ -286,6 +350,7 @@ button {
   background-color: #f2f2f2;
   padding: 0.8rem 1rem;
   margin-bottom: 1rem;
+  position: relative;
 }
 .devices-wrap .input-form {
   margin-left: 0rem;
@@ -297,6 +362,7 @@ button {
 .devices-wrap .input-form select {
   width: 100%;
 }
+
 .device-title {
   font-family: "Montserrat Medium";
   font-size: 1.2rem;
@@ -328,6 +394,29 @@ button:hover {
 button:active {
   background-color: #575757;
   box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.4);
+}
+button.deleteBtn {
+  background-color: transparent;
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: rgba(0, 0, 0, 0.9);
+  width: 2rem;
+  height: 2rem;
+  font-size: 2rem;
+  line-height: 2rem;
+  padding: 0;
+  box-sizing: border-box;
+  transition: 0.1s;
+}
+button:hover.deleteBtn {
+  background-color: transparent;
+  box-shadow: none;
+  transform: rotate(90deg) scale(1.3);
+}
+button:active.deleteBtn {
+  background-color: transparent;
+  box-shadow: none;
 }
 .devices-list-wrap {
   display: flex;
@@ -394,5 +483,21 @@ button:active {
 ::-webkit-scrollbar-track:hover {
   border-left: solid 1px #aaa;
   background-color: #eee;
+}
+.push {
+  border: 1px solid rgba(0, 0, 0, 0.9);
+  margin: 0 auto;
+  border-radius: 8px;
+  width: 80%;
+  padding: 1rem;
+}
+.push .btn-row {
+  display: flex;
+}
+.push .btn-row *:not(:last-child) {
+  margin-right: 0.5rem;
+}
+.push-success {
+  background-color: rgb(188, 226, 188);
 }
 </style>

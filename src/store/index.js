@@ -30,6 +30,35 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    POST(url, data) {
+      try {
+        axios({
+          url: "http://localhost:8080/api/" + url,
+          data: data,
+          method: "POST"
+        }).then((resp) => {
+          console.log("POST response: ", resp);
+        }, error => {
+          // вторая функция - запустится при вызове reject
+          console.log("Rejected: " + error);
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+            console.log(error.response)
+            console.log(`Ошибка сервера ${error.response.status} при ответе`);
+          } else if (error.request) {
+            console.log(`Ошибка сервера ${error.request.status} при запросе`);
+            console.log(error.request);
+          } else {
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    },
     AUTH_REQUEST(context, user) {
       let prom;
       try {
@@ -47,6 +76,7 @@ export default new Vuex.Store({
               localStorage.setItem("user-token", token); // сохранить токен в localstorage
               localStorage.setItem("department-id", resp.data.department_id); // сохранить ID отдела в localstorage
               localStorage.setItem("fio", resp.data.fio); // сохранить ФИО в localstorage
+              localStorage.setItem("user-id", resp.data.user_id); // сохранить UserID в localstorage
               context.commit("AUTH_SUCCESS", token);
               resolve(resp);
             }, error => {
@@ -105,6 +135,7 @@ export default new Vuex.Store({
         localStorage.removeItem("user-token"); // удаляем токен из localstorage
         localStorage.removeItem("department-id"); // удаляем ID отдела из localstorage
         localStorage.removeItem("fio"); // удаляем ФИО из localstorage
+        localStorage.removeItem("user-id"); // удаляем UserID из localstorage
         delete axios.defaults.headers.common["Authorization"];
         resolve();
       });
