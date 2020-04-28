@@ -67,7 +67,7 @@
                   <select
                     name="servicetype"
                     id="servicetype"
-                    v-model="checked_service[index]"
+                    v-model="checked_service[device.device_id]"
                   >
                     <option
                       :value="type.type"
@@ -151,6 +151,7 @@ export default {
       department_id: -1,
       department_devices: [
         {
+          device_id: 112233,
           name: "ПК #112233",
           characteristics:
             "Текст, текст, текст, текст. Текст, текст, текст, текст.",
@@ -172,6 +173,7 @@ export default {
           comment: "Комментарий к устройству",
         },
         {
+          device_id: 512383,
           name: "МФУ #512383",
           characteristics:
             "Текст, текст, текст, текст. Текст, текст, текст, текст.",
@@ -192,6 +194,7 @@ export default {
           comment: "Комментарий к устройству",
         },
         {
+          device_id: 512384,
           name: "МФУ #512384",
           characteristics:
             "Текст, текст, текст, текст. Текст, текст, текст, текст.",
@@ -219,7 +222,9 @@ export default {
   },
   methods: {
     addToChecked(index) {
-      this.checked_service[index] = 0;
+      console.log(this.department_devices[index]);
+      this.checked_service[this.department_devices[index].device_id] = 0;
+      console.log(this.checked_service);
       this.checked_devices.push(this.department_devices[index]);
       this.department_devices.splice(index, 1);
     },
@@ -238,7 +243,10 @@ export default {
       };
       for (let index = 0; index < this.checked_devices.length; index++) {
         this.checked_devices[index].types.map((el) => {
-          if (this.checked_service[index] === el.type) {
+          if (
+            this.checked_service[this.checked_devices[index].device_id] ===
+            el.type
+          ) {
             el.checked = true;
             return el;
           } else {

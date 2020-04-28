@@ -5,15 +5,11 @@
       <div class="col">
         <h2>Оповещения</h2>
         <div class="info-block scroll-bar rounded-corners">
-          <div
-            class="message-box rounded-corners"
-            :key="message.message_id"
+          <MessageBox
             v-for="message in messages"
-          >
-            <h4>{{ message.timestamp }}</h4>
-            <h3>{{ message.title }}</h3>
-            <p>{{ message.body }}</p>
-          </div>
+            :key="message.message_id"
+            :message="message"
+          ></MessageBox>
         </div>
         <div class="bottom-btn">
           <router-link to="history">Посмотреть все оповещения</router-link>
@@ -44,7 +40,9 @@
             <h4>08.02.2020, 13:45</h4>
             <h3>Заявка №773</h3>
             <p>ПК #342325<br />Принтер #342323<br />Статус: на рассмотрении</p>
-            <button class="more-btn">Подробнее →</button>
+            <div class="btn-wrap">
+              <button class="more-btn">Подробнее →</button>
+            </div>
           </div>
         </div>
         <div class="bottom-btn">
@@ -57,11 +55,15 @@
 
 <script>
 import Sidepanel from "@/components/Sidepanel.vue";
+import MessageBox from "@/components/MessageBox.vue";
 import axios from "axios";
+import JWT from "jwt-client";
+
 export default {
   name: "Main",
   components: {
     Sidepanel,
+    MessageBox,
   },
   data() {
     return {
@@ -72,6 +74,9 @@ export default {
     const token = localStorage.getItem("user-token");
     if (token) {
       this.$http.defaults.headers.common["Authorization"] = token;
+      console.log(JWT.read(token));
+      this.$store.state.session = JWT.read(token);
+      this.$store.state.role = JWT.read(token).claim.role;
     }
   },
   mounted() {
@@ -158,6 +163,9 @@ export default {
   box-sizing: border-box;
   font-weight: normal;
 }
+.col .message-box {
+  width: unset;
+}
 .message-box,
 .add-btn {
   margin-top: 10px;
@@ -214,16 +222,21 @@ export default {
 .bottom-btn a {
   color: #fff;
 }
+
 .delete-btn,
 .more-btn {
   text-decoration: underline;
   background: none;
   border: 0px;
-  margin-left: calc(72%);
+  /* margin-left: calc(72%); */
   cursor: pointer;
   outline: 0px;
 }
+.btn-wrap {
+  display: flex;
+  justify-content: flex-end;
+}
 .more-btn {
-  margin-left: calc(60%);
+  /* margin-left: calc(60%); */
 }
 </style>

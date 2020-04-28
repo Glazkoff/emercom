@@ -38,6 +38,10 @@ export default {
 </script>
 <style>
 @font-face {
+  font-family: "Montserrat Light";
+  src: url("assets/Montserrat-Light.ttf");
+}
+@font-face {
   font-family: "Montserrat Regular";
   src: url("assets/Montserrat-Regular.ttf");
 }
@@ -107,5 +111,32 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   height: auto;
+}
+button.deleteBtn {
+  outline: none;
+  user-select: none;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: rgba(0, 0, 0, 0.9);
+  width: 2rem;
+  height: 2rem;
+  font-size: 2rem;
+  line-height: 2rem;
+  padding: 0;
+  box-sizing: border-box;
+  transition: 0.1s;
+}
+button:hover.deleteBtn {
+  background-color: transparent;
+  box-shadow: none;
+  transform: rotate(90deg) scale(1.3);
+}
+button:active.deleteBtn {
+  background-color: transparent;
+  box-shadow: none;
 }
 </style>
