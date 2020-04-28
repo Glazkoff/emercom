@@ -1,6 +1,6 @@
 <template>
   <div class="request-box">
-    <h4 class="request-id">Заявка #{{ request.request_id }}</h4>
+    <h4 class="request-id" v-if="!inmodal">Заявка #{{ request.request_id }}</h4>
     <p>
       <small>Дата отправки:</small><br />{{ dateformat(request.timestamp) }}
     </p>

@@ -86,7 +86,19 @@
           </button>
           <div class="inner">
             <div v-if="morerequest">
+              <h2>Заявка #{{ morerequest.request_id }}</h2>
               <RequestBox :request="morerequest" inmodal="true"> </RequestBox>
+              <h4>Комментарий:</h4>
+              <p>{{ morerequest.comment }}</p>
+              <p v-if="!morerequest.comment">
+                <small><i>Нет комментария</i></small>
+              </p>
+              <h4>Исполнитель:</h4>
+              <p>
+                {{
+                  morerequest.executor_id == null ? "Не назначен" : "Назначен"
+                }}
+              </p>
             </div>
           </div>
         </div>
@@ -276,6 +288,16 @@ export default {
   padding-right: 1rem;
   box-sizing: border-box;
   overflow-y: auto;
+}
+.inner p {
+  margin: 0.5rem;
+}
+.inner h2 {
+  margin-top: 0.8rem;
+}
+.inner h4 {
+  margin-top: 0.8rem;
+  margin-bottom: 0;
 }
 .outer .deleteBtn {
   top: 12px;
