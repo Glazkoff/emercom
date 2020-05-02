@@ -1,10 +1,9 @@
 <template>
   <div class="request-box">
-    <h4 class="request-id" v-if="!inmodal">Заявка #{{ request.request_id }}</h4>
+    <h4 class="request-id" v-if="!inmodal">Заявка №{{ request.request_id }}</h4>
     <p>
       <small>Дата отправки:</small><br />{{ dateformat(request.timestamp) }}
     </p>
-    <!-- <p v-if="this.request.content.length > 0"> -->
     <div class="devices" v-if="this.request.content.length !== 0">
       <div class="device-row">
         <div class="device-name">Название устройства</div>
@@ -25,7 +24,6 @@
         </div>
       </div>
     </div>
-    <!-- </p> -->
     <div class="btn-wrap" v-if="!inmodal">
       <button class="more-btn" @click="morereq">Подробнее →</button>
     </div>

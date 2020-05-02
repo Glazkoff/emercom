@@ -92,14 +92,14 @@ body {
 .split-screen-wrapper {
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   width: 100vw;
   max-height: 100vh;
   min-height: calc(100vh - 30px);
 }
 .split-screen-half {
   background-color: #e5e5e5;
-  width: 50vw;
+  /* width: 50vw; */
   display: flex;
 }
 .split-screen-half:nth-child(2) {
@@ -138,5 +138,69 @@ button:hover.deleteBtn {
 button:active.deleteBtn {
   background-color: transparent;
   box-shadow: none;
+}
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-thumb {
+  border-width: 1px 1px 1px 2px;
+  border-color: #777;
+  background-color: #aaa;
+  border-radius: 8px;
+  cursor: pointer;
+}
+::-webkit-scrollbar-thumb:hover {
+  border-width: 1px 1px 1px 2px;
+  border-color: #555;
+  background-color: #777;
+}
+::-webkit-scrollbar-track {
+  border-width: 0;
+}
+::-webkit-scrollbar-track:hover {
+  border-left: solid 1px #aaa;
+  background-color: #eee;
+}
+.input-form .radio-point {
+  display: flex;
+  /* height: 40px; */
+  /* margin-right: ; */
+}
+.input-form .radio-point input[type="radio"] {
+  display: none;
+}
+.input-form .radio-point input[type="radio"],
+.input-form .radio-point label {
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.input-form .radio-point label {
+  padding: 1rem;
+  border: 1px solid rgb(117, 117, 117);
+}
+.input-form .radio-point label:not(:first-child) {
+}
+.input-form .radio-point input:checked + label {
+  background-color: #0855ad;
+  color: #fff;
+  display: flex;
+  /* border: 1px solid #000; */
+  border: none;
+  /* font-weight: bold; */
+}
+.input-form .radio-group {
+  display: block;
+  display: flex;
+}
+.loading-box {
+  width: 100%;
+  display: flex;
+  /* height: 20vh; */
+}
+.loading-box > * {
+  margin: 10vh auto;
 }
 </style>

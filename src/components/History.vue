@@ -2,7 +2,10 @@
   <div class="main-screen">
     <Sidepanel></Sidepanel>
     <div class="main-panel">
-      <div class="messages-wrap">
+      <div class="loading-box" v-if="loading">
+        <Loading></Loading>
+      </div>
+      <div class="messages-wrap" v-else>
         <div class="common-messages">
           <h3>Общие оповещения</h3>
           <MessageBox
@@ -27,6 +30,7 @@
 <script>
 import Sidepanel from "@/components/Sidepanel.vue";
 import MessageBox from "@/components/MessageBox.vue";
+import Loading from "@/components/Loading.vue";
 import axios from "axios";
 
 export default {
@@ -34,15 +38,18 @@ export default {
   components: {
     Sidepanel,
     MessageBox,
+    Loading,
   },
   data() {
     return {
       common: [],
       personal: [],
+      loading: false,
     };
   },
   async mounted() {
     try {
+      this.loading = true;
       axios.get("http://localhost:8080/api/messages?common=true").then(
         (res) => {
           res.data.forEach((el) => {
@@ -57,10 +64,12 @@ export default {
         (res) => {
           res.data.forEach((el) => {
             this.personal.push(el);
+            this.loading = false;
           });
         },
         (err) => {
           console.log("Main. Error: ", err);
+          this.loading = false;
         }
       );
     } catch (error) {

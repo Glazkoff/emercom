@@ -2,7 +2,10 @@
   <div class="main-screen" @keydown.esc="closeModal()">
     <Sidepanel></Sidepanel>
     <div class="main-panel">
-      <div class="requests-wrap">
+      <div class="loading-box" v-if="loading">
+        <Loading></Loading>
+      </div>
+      <div class="requests-wrap" v-else>
         <div class="considiration">
           <h3>На рассмотрении</h3>
           <RequestBox
@@ -86,7 +89,7 @@
           </button>
           <div class="inner">
             <div v-if="morerequest">
-              <h2>Заявка #{{ morerequest.request_id }}</h2>
+              <h2>Заявка №{{ morerequest.request_id }}</h2>
               <RequestBox :request="morerequest" inmodal="true"> </RequestBox>
               <h4>Комментарий:</h4>
               <p>{{ morerequest.comment }}</p>
@@ -110,6 +113,7 @@
 <script>
 import Sidepanel from "@/components/Sidepanel.vue";
 import RequestBox from "@/components/RequestBox.vue";
+import Loading from "@/components/Loading.vue";
 import axios from "axios";
 
 export default {
@@ -125,11 +129,13 @@ export default {
       more: false,
       modalrequest: false,
       morerequest: false,
+      loading: false,
     };
   },
   components: {
     Sidepanel,
     RequestBox,
+    Loading,
   },
   methods: {
     delreq(index) {
@@ -185,6 +191,7 @@ export default {
     },
   },
   async mounted() {
+    this.loading = true;
     try {
       axios.get("http://localhost:8080/api/requests").then(
         (res) => {
@@ -208,9 +215,11 @@ export default {
                 break;
             }
           });
+          this.loading = false;
         },
         (err) => {
           console.log("Main. Error: ", err);
+          this.loading = false;
         }
       );
     } catch (err) {

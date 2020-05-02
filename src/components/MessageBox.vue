@@ -3,16 +3,23 @@
     class="message-box rounded-corners"
     :class="{ important: message.type === 'important' }"
   >
-    <h4>{{ message.timestamp }}</h4>
+    <h4>{{ dateformat(message.timestamp) }}</h4>
     <h3>{{ message.title }}</h3>
     <p>{{ message.body }}</p>
   </div>
 </template>
 
 <script>
+import moment from "moment";
 export default {
   name: "MessageBox",
   props: ["message"],
+  methods: {
+    dateformat(date) {
+      moment.locale("ru");
+      return moment(date).format("lll");
+    },
+  },
 };
 </script>
 

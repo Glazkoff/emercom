@@ -18,6 +18,12 @@
       </div>
       <div class="request-main" v-else-if="error">
         <h3>Ошибка</h3>
+        <div class="btn-row">
+          <button @click="newRequest()">Отправить ещё одну</button>
+          <router-link to="list" tag="button"
+            >Просмотреть весь список</router-link
+          >
+        </div>
       </div>
       <div class="request-wrap" v-else-if="!success && !error">
         <div class="request-main">
@@ -286,7 +292,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .main-panel {
   overflow-y: scroll;
   position: relative;
@@ -384,7 +390,8 @@ button {
 .characteristics-title {
   font-weight: bold;
 }
-button {
+.input-form button,
+.devices-list-wrap button:not(.list-btn) {
   background-color: #737373;
   border: 0px;
   border-radius: 8px;
@@ -396,14 +403,22 @@ button {
   outline: 0px;
   transition: 0.02s;
 }
-button:hover {
+button:disabled {
+  background-color: #b8b8b8;
+}
+.input-form button:hover,
+.devices-list-wrap button:hover:not(.list-btn) {
   background-color: #949393;
 }
-button:active {
+.input-form button:active,
+.devices-list-wrap button:active:not(.list-btn) {
   background-color: #575757;
   box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.4);
 }
-button.deleteBtn {
+.devices-list-wrap button:disabled {
+  background-color: #b8b8b8;
+}
+.input-form button.deleteBtn {
   background-color: transparent;
   position: absolute;
   right: 0;
@@ -452,6 +467,9 @@ button:active.deleteBtn {
   padding-left: 0.4rem;
   padding-right: 0.4rem;
   color: #000;
+  border: none;
+  cursor: pointer;
+  outline: none;
 }
 .list-btn:hover {
   background-color: transparent;

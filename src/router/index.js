@@ -4,7 +4,7 @@ import VueRouter from "vue-router";
 import Entrance from "../views/Entrance.vue";
 import Main from "../views/Main.vue";
 import List from "../components/List.vue";
-import Chat from "../components/Chat.vue";
+import NewMessage from "../components/NewMessage.vue";
 import History from "../components/History.vue";
 import Write from "../components/Write.vue";
 import store from '../store/index'
@@ -61,9 +61,9 @@ const routes = [{
     beforeEnter: ifAuthenticated
   },
   {
-    path: "/chat",
-    name: "Chat",
-    component: Chat,
+    path: "/newmessage",
+    name: "NewMessage",
+    component: NewMessage,
     beforeEnter: ifAuthenticated
   },
   {

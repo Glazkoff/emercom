@@ -35,9 +35,9 @@
         <div class="white-spacer"></div>
       </div>
       <div class="link-wrapper">
-        <router-link to="chat" class="nav-link"
+        <router-link to="NewMessage" class="nav-link"
           ><span class="nav-logo chat"></span
-          ><span>Чат с<br />IT-специалистом</span></router-link
+          ><span>Добавить<br />оповещение</span></router-link
         >
         <div class="white-spacer"></div>
       </div>
@@ -100,6 +100,7 @@ export default {
   text-decoration: none;
 }
 .logout-btn {
+  z-index: 1000;
   border: none;
   font-family: "Montserrat Medium";
   background-color: transparent;

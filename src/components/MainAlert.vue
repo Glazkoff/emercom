@@ -1,28 +1,45 @@
 <template>
-    <div class="alerts-wrapper" id="main-alert-panel">
-        <h2 class="alerts-title">Общие оповещения</h2>
-        <AlertBox v-for="alert in alerts" :key="alert.id" :alert="alert"></AlertBox>
-    </div>
+  <div class="alerts-wrapper" id="main-alert-panel">
+    <h2 class="alerts-title">Общие оповещения</h2>
+    <MessageBox
+      v-for="message in common"
+      :key="message.message_id"
+      :message="message"
+    ></MessageBox>
+  </div>
 </template>
 
 <script>
-import AlertBox from '@/components/AlertBox.vue'
+import MessageBox from "@/components/MessageBox.vue";
+import axios from "axios";
+
 export default {
-  name: 'MainAlert',
+  name: "MainAlert",
   components: {
-    AlertBox
+    MessageBox,
   },
-  data () {
+  data() {
     return {
-      alerts: [{
-        id: 1,
-        date: '2020-02-10',
-        title: 'Название',
-        text: 'Текст, текст. Текст, текст. Текст, текст. Текст, текст. Текст, текст. Текст, текст. Текст, текст. Текст, текст. Текст, текст.'
-      }]
+      common: [],
+    };
+  },
+  async mounted() {
+    try {
+      axios.get("http://localhost:8080/api/messages?common=true").then(
+        (res) => {
+          res.data.forEach((el) => {
+            this.common.push(el);
+          });
+        },
+        (err) => {
+          console.log("Main. Error: ", err);
+        }
+      );
+    } catch (err) {
+      console.log(err);
     }
-  }
-}
+  },
+};
 </script>
 
 <style>
@@ -30,6 +47,10 @@ export default {
   display: flex;
   flex-direction: column;
   /* margin: 0 auto; */
+  width: 100%;
+  margin-right: 1.2rem;
+  /* padding: 1rem; */
+  box-sizing: border-box;
 }
 .alerts-title {
   margin-left: 20px;

@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 // Парсинг запросов по типу: application/x-www-form-urlencoded
 app.use(
   express.urlencoded({
-    extended: true,
+    extended: true
   })
 );
 
@@ -26,7 +26,7 @@ app.use(
 app.use("/", serveStatic(path.join(__dirname, "../dist")));
 
 // настройка CORS
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
@@ -54,7 +54,7 @@ const pool = mysql.createPool({
   user: dbConfig.USER,
   password: dbConfig.PASSWORD,
   database: dbConfig.DB,
-  charset: "utf8_general_ci",
+  charset: "utf8_general_ci"
 });
 
 pool.getConnection((err, connection) => {
@@ -101,8 +101,8 @@ let salt = bcrypt.genSaltSync(10);
 /********************************************* */
 
 // Обработка запросов протокола WebSockets
-app.ws("/ws", function(ws, req) {
-  ws.on("message", function(msg) {
+app.ws("/ws", function (ws, req) {
+  ws.on("message", function (msg) {
     console.log(ws);
     console.log("WS:", msg);
     ws.send(msg);
@@ -142,19 +142,17 @@ app.post("/api/register", (req, res) => {
               return res.status(500).send("Проблема получении пользователя");
             } else {
               console.log(reslt);
-              let token = jwt.sign(
-                {
-                  id: reslt.insertId,
+              let token = jwt.sign({
+                  id: reslt.insertId
                 },
-                CONFIG.SECRET,
-                {
-                  expiresIn: 86400, // токен на 24 часа
+                CONFIG.SECRET, {
+                  expiresIn: 86400 // токен на 24 часа
                 }
               );
               res.status(200).send({
                 token,
                 fio: reslt[0].fio,
-                login: login,
+                login: login
               });
             }
           }
@@ -185,18 +183,16 @@ app.post("/api/login", (req, res) => {
           );
           if (!passwordIsValid) {
             return res.status(401).send({
-              token: null,
+              token: null
             });
           } else {
-            let token = jwt.sign(
-              {
+            let token = jwt.sign({
                 user_id: result[0].user_id,
                 department_id: result[0].department_id,
-                role: result[0].role,
+                role: result[0].role
               },
-              CONFIG.SECRET,
-              {
-                expiresIn: 86400, // токен на 24 часа
+              CONFIG.SECRET, {
+                expiresIn: 86400 // токен на 24 часа
               }
             );
             res.status(200).send({
@@ -204,7 +200,7 @@ app.post("/api/login", (req, res) => {
               fio: result[0].fio,
               login: req.body.login,
               department_id: result[0].department_id,
-              user_id: result[0].user_id,
+              user_id: result[0].user_id
             });
           }
         }
@@ -224,7 +220,7 @@ app.post("/api/requests", (req, res) => {
         req.body.user_id,
         req.body.department_id,
         JSON.stringify(req.body.checked_devices),
-        req.body.common_comment,
+        req.body.common_comment
       ],
       (err, result) => {
         if (err) {
@@ -244,14 +240,14 @@ app.post("/api/requests", (req, res) => {
 
 app.get("/api/requests", (req, res) => {
   try {
-    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
       err,
       decoded
     ) {
       if (err) {
         return res.status(401).send({
           auth: false,
-          message: "Ошибка аутентификации токена",
+          message: "Ошибка аутентификации токена"
         });
       } else {
         console.log("GET");
@@ -297,14 +293,14 @@ app.get("/api/requests", (req, res) => {
 // app.put("/api/requests", (req, res) => { });
 
 app.delete("/api/requests/:id", (req, res) => {
-  jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
+  jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
     err,
     decoded
   ) {
     if (err) {
       return res.status(401).send({
         auth: false,
-        message: "Ошибка аутентификации токена",
+        message: "Ошибка аутентификации токена"
       });
     } else {
       console.log("GET");
@@ -333,16 +329,54 @@ app.delete("/api/requests/:id", (req, res) => {
 // CRUD: messages
 app.post("/api/messages", (req, res) => {
   // if (connection) {
+  console.log("MESSAGE", req.body);
   try {
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+      err,
+      decoded
+    ) {
+      if (err) {
+        return res.status(401).send({
+          auth: false,
+          message: "Ошибка аутентификации токена"
+        });
+      } else {
+        try {
+          pool.query(
+            "INSERT INTO `messages` (`title`, `body`, `from_user_id`, `destination_id`, `type`, `broadcast`) VALUES (?, ?, ?, ?, ?, ?)",
+            [
+              req.body.title,
+              req.body.body,
+              decoded.user_id,
+              +req.body.destination_id,
+              req.body.type,
+              req.body.broadcast
+            ],
+            (err, result) => {
+              if (err) {
+                console.log(err);
+                res.status(500).send("Ошибка на сервере");
+              } else {
+                console.log("Результат запроса к БД:");
+                console.log(result);
+                res.send(result);
+              }
+            }
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.get("/api/messages", (req, res) => {
+  if (req.query.common) {
     pool.query(
-      "INSERT INTO `messages` ('title', 'body', 'from_user_id', 'destination_id', 'type') VALUES (?, ?, ?, ?, ?)",
-      [
-        req.body.title,
-        req.body.body,
-        req.body.fromid,
-        req.body.toid,
-        req.body.status,
-      ],
+      "SELECT * FROM `messages` WHERE broadcast = 'common'",
       (err, result) => {
         if (err) {
           console.log(err);
@@ -350,47 +384,26 @@ app.post("/api/messages", (req, res) => {
         } else {
           console.log("Результат запроса к БД:");
           console.log(result);
-          res.send(result);
+          res.json(result);
         }
       }
     );
-  } catch (error) {
-    console.log(error);
-  }
-  // }
-});
-
-app.get("/api/messages", (req, res) => {
-  if (req.headers["authorization"]) {
+  } else if (req.headers["authorization"]) {
     try {
-      jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
+      jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
         err,
         decoded
       ) {
         if (err) {
           return res.status(401).send({
             auth: false,
-            message: "Ошибка аутентификации токена",
+            message: "Ошибка аутентификации токена"
           });
         } else {
           console.log(decoded);
           console.log("GET");
           try {
-            if (req.query.common) {
-              pool.query(
-                "SELECT * FROM `messages` WHERE broadcast = 'common'",
-                (err, result) => {
-                  if (err) {
-                    console.log(err);
-                    res.status(500).send("Ошибка на сервере");
-                  } else {
-                    console.log("Результат запроса к БД:");
-                    console.log(result);
-                    res.json(result);
-                  }
-                }
-              );
-            } else if (req.query.personal) {
+            if (req.query.personal) {
               console.log(
                 "PERSONAL ",
                 jwt.verify(req.headers["authorization"], CONFIG.SECRET).user_id
@@ -399,7 +412,7 @@ app.get("/api/messages", (req, res) => {
                 "SELECT * FROM `messages` WHERE broadcast = 'personal' AND destination_id = ?",
                 [
                   jwt.verify(req.headers["authorization"], CONFIG.SECRET)
-                    .user_id,
+                  .user_id
                 ],
                 (err, result) => {
                   if (err) {
@@ -435,7 +448,7 @@ app.get("/api/messages", (req, res) => {
   } else {
     res.status(401).send({
       auth: false,
-      message: "Нет токена!",
+      message: "Нет токена!"
     });
   }
   // if (connection) {
@@ -460,7 +473,7 @@ app.get("/test", (req, res) => {
     }
     console.log(decode);
     res.status(200).send({
-      id: decode.id,
+      id: decode.id
     });
   } else {
     res.status(401).send("Токен не найден!");

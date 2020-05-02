@@ -124,9 +124,8 @@ export default {
 .info-block {
   border: 1px solid #000;
   height: calc(100vh - 45px - 45px);
-  /* max-height: 82vh; */
   background-color: #c4c4c4;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .bottom-btn {
   position: absolute;
