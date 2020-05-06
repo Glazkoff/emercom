@@ -376,7 +376,7 @@ app.post("/api/messages", (req, res) => {
 app.get("/api/messages", (req, res) => {
   if (req.query.common) {
     pool.query(
-      "SELECT * FROM `messages` WHERE broadcast = 'common'",
+      "SELECT * FROM `messages` WHERE broadcast = 'common' ORDER BY type, message_id DESC",
       (err, result) => {
         if (err) {
           console.log(err);
@@ -409,7 +409,7 @@ app.get("/api/messages", (req, res) => {
                 jwt.verify(req.headers["authorization"], CONFIG.SECRET).user_id
               );
               pool.query(
-                "SELECT * FROM `messages` WHERE broadcast = 'personal' AND destination_id = ?",
+                "SELECT * FROM `messages` WHERE broadcast = 'personal' AND destination_id = ? ORDER BY type, message_id DESC",
                 [
                   jwt.verify(req.headers["authorization"], CONFIG.SECRET)
                   .user_id
@@ -426,7 +426,7 @@ app.get("/api/messages", (req, res) => {
                 }
               );
             } else {
-              pool.query("SELECT * FROM `messages`", (err, result) => {
+              pool.query("SELECT * FROM `messages` ORDER BY type, message_id DESC", (err, result) => {
                 if (err) {
                   console.log(err);
                   res.status(500).send("Ошибка на сервере");
@@ -461,6 +461,58 @@ app.get("/api/messages", (req, res) => {
 
 // TODO: add delete messages
 // app.delete("/api/messages", (req, res) => { });
+
+// CRUD: devices
+app.get("/api/devices", (req, res) => {
+  if (req.headers["authorization"]) {
+    try {
+      jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+        err,
+        decoded
+      ) {
+        if (err) {
+          return res.status(401).send({
+            auth: false,
+            message: "Ошибка аутентификации токена"
+          });
+        } else {
+          console.log(decoded);
+          try {
+            pool.query(
+              "SELECT * FROM `devices` WHERE department_id = ?",
+              [
+                decoded.department_id
+              ],
+              (err, result) => {
+                res.send(result);
+              })
+          } catch (error) {
+            console.log(error);
+
+          }
+          // res.send(decoded)
+        }
+      })
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    return res.status(401).send({
+      auth: false,
+      message: "Ошибка аутентификации токена"
+    });
+  }
+});
+// app.post("/api/devices", (req, res) => {
+
+// });
+
+// TODO: add put devices
+// app.put("/api/devices", (req, res) => { });
+
+// TODO: add delete devices
+// app.delete("/api/devices", (req, res) => { });
+
 
 app.get("/test", (req, res) => {
   console.log(req.headers);

@@ -130,7 +130,9 @@
                 Добавить в заявку
               </button>
               <div class="list-data">
-                <div class="data-title">{{ depdevice.name }}</div>
+                <div class="data-title">
+                  {{ depdevice.name }} (#{{ depdevice.device_id }})
+                </div>
                 <div class="data-description">
                   <strong>Характеристики</strong>:<br />
                   {{ depdevice.characteristics }}
@@ -156,70 +158,70 @@ export default {
       fio: "",
       department_id: -1,
       department_devices: [
-        {
-          device_id: 112233,
-          name: "ПК #112233",
-          characteristics:
-            "Текст, текст, текст, текст. Текст, текст, текст, текст.",
-          types: [
-            {
-              type: 0,
-              description: "Установка Windows",
-            },
-            {
-              type: 1,
-              description: "Обслуживание",
-              checked: true,
-            },
-            {
-              type: 2,
-              description: "Устранение неполадок",
-            },
-          ],
-          comment: "Комментарий к устройству",
-        },
-        {
-          device_id: 512383,
-          name: "МФУ #512383",
-          characteristics:
-            "Текст, текст, текст, текст. Текст, текст, текст, текст.",
-          types: [
-            {
-              type: 0,
-              description: "Заправка картриджа",
-            },
-            {
-              type: 1,
-              description: "Обслуживание",
-            },
-            {
-              type: 2,
-              description: "Устранение неполадок",
-            },
-          ],
-          comment: "Комментарий к устройству",
-        },
-        {
-          device_id: 512384,
-          name: "МФУ #512384",
-          characteristics:
-            "Текст, текст, текст, текст. Текст, текст, текст, текст.",
-          types: [
-            {
-              type: 0,
-              description: "Заправка картриджа",
-            },
-            {
-              type: 1,
-              description: "Обслуживание",
-            },
-            {
-              type: 2,
-              description: "Устранение неполадок",
-            },
-          ],
-          comment: "Комментарий к устройству",
-        },
+        // {
+        //   device_id: 112233,
+        //   name: "ПК #112233",
+        //   characteristics:
+        //     "Текст, текст, текст, текст. Текст, текст, текст, текст.",
+        //   types: [
+        //     {
+        //       type: 0,
+        //       description: "Установка Windows",
+        //     },
+        //     {
+        //       type: 1,
+        //       description: "Обслуживание",
+        //       checked: true,
+        //     },
+        //     {
+        //       type: 2,
+        //       description: "Устранение неполадок",
+        //     },
+        //   ],
+        //   comment: "Комментарий к устройству",
+        // },
+        // {
+        //   device_id: 512383,
+        //   name: "МФУ #512383",
+        //   characteristics:
+        //     "Текст, текст, текст, текст. Текст, текст, текст, текст.",
+        //   types: [
+        //     {
+        //       type: 0,
+        //       description: "Заправка картриджа",
+        //     },
+        //     {
+        //       type: 1,
+        //       description: "Обслуживание",
+        //     },
+        //     {
+        //       type: 2,
+        //       description: "Устранение неполадок",
+        //     },
+        //   ],
+        //   comment: "Комментарий к устройству",
+        // },
+        // {
+        //   device_id: 512384,
+        //   name: "МФУ #512384",
+        //   characteristics:
+        //     "Текст, текст, текст, текст. Текст, текст, текст, текст.",
+        //   types: [
+        //     {
+        //       type: 0,
+        //       description: "Заправка картриджа",
+        //     },
+        //     {
+        //       type: 1,
+        //       description: "Обслуживание",
+        //     },
+        //     {
+        //       type: 2,
+        //       description: "Устранение неполадок",
+        //     },
+        //   ],
+        //   comment: "Комментарий к устройству",
+        // },
       ],
       checked_service: [],
       checked_devices: [],
@@ -288,6 +290,18 @@ export default {
   mounted() {
     this.fio = localStorage.getItem("fio");
     this.department_id = localStorage.getItem("department-id");
+    axios.get("http://localhost:8080/api/devices").then(
+      (res) => {
+        res.data.forEach((el) => {
+          el.comment = "";
+          this.department_devices.push(el);
+          console.log(el);
+        });
+      },
+      (err) => {
+        console.log("Write. Error: ", err);
+      }
+    );
   },
 };
 </script>
@@ -296,7 +310,7 @@ export default {
 .main-panel {
   overflow-y: scroll;
   position: relative;
-  height: calc(100vh - 30px);
+  height: 100vh;
   padding-bottom: 1rem;
   box-sizing: border-box;
 }

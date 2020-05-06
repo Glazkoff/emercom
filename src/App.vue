@@ -74,21 +74,7 @@ body {
   font-family: "Montserrat Regular";
   overflow: hidden;
 }
-#admin-panel {
-  height: 30px;
-  width: 100vw;
-  background-color: rgba(0, 0, 0, 0.2);
-  font-family: "Montserrat Regular";
-  box-sizing: border-box;
-  display: flex;
-  justify-content: flex-start;
-}
-#admin-panel * {
-  display: block;
-  max-height: 30px;
-  margin: 5px 10px;
-  margin-right: 15px;
-}
+
 .split-screen-wrapper {
   display: grid;
   grid-template-rows: 1fr;
@@ -103,7 +89,7 @@ body {
   display: flex;
 }
 .split-screen-half:nth-child(2) {
-  background-color: #a8a8a8;
+  background-color: #d4d4d4;
 }
 .centered-wrapper {
   margin: auto auto;

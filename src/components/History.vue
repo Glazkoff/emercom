@@ -95,4 +95,16 @@ export default {
 .common-messages {
   width: calc(50% - 8px);
 }
+.personal-messages h3,
+.common-messages h3 {
+  position: sticky;
+  top: 0;
+  margin: 0;
+  padding-top: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  background-color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
 </style>

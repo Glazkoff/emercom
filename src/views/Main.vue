@@ -1,15 +1,20 @@
 <template>
   <div class="main-screen">
     <Sidepanel></Sidepanel>
-    <div class="main main-panel centered-wrapper">
+    <div class="main main-panel centered-wrapper main-panel-nonscroll">
       <div class="col">
         <h2>Оповещения</h2>
         <div class="info-block scroll-bar rounded-corners">
-          <MessageBox
-            v-for="message in messages"
-            :key="message.message_id"
-            :message="message"
-          ></MessageBox>
+          <div class="loading-box" v-if="messagesLoading">
+            <Loading></Loading>
+          </div>
+          <div class="messages" v-else>
+            <MessageBox
+              v-for="message in messages"
+              :key="message.message_id"
+              :message="message"
+            ></MessageBox>
+          </div>
         </div>
         <div class="bottom-btn">
           <router-link to="history">Посмотреть все оповещения</router-link>
@@ -21,6 +26,9 @@
           <router-link to="write" tag="button" class="add-btn rounded-corners"
             ><span class="nav-logo cross"></span>Добавить заявку</router-link
           >
+          <div class="loading-box">
+            <Loading></Loading>
+          </div>
           <div class="message-box rounded-corners">
             <button class="delete-btn">Отменить</button>
             <h4>08.02.2020, 13:45</h4>
@@ -36,6 +44,9 @@
       <div class="col">
         <h2>Архив заявок</h2>
         <div class="info-block scroll-bar rounded-corners">
+          <div class="loading-box">
+            <Loading></Loading>
+          </div>
           <div class="message-box rounded-corners">
             <h4>08.02.2020, 13:45</h4>
             <h3>Заявка №773</h3>
@@ -56,6 +67,7 @@
 <script>
 import Sidepanel from "@/components/Sidepanel.vue";
 import MessageBox from "@/components/MessageBox.vue";
+import Loading from "@/components/Loading.vue";
 import axios from "axios";
 import JWT from "jwt-client";
 
@@ -64,10 +76,13 @@ export default {
   components: {
     Sidepanel,
     MessageBox,
+    Loading,
   },
   data() {
     return {
       messages: [],
+      messagesLoading: false,
+      requestsLoading: false,
     };
   },
   beforeMount() {
@@ -80,22 +95,18 @@ export default {
     }
   },
   mounted() {
-    // axios.get("http://localhost:8080/test").then(
-    //   (res) => {
-    //     console.log(res);
-    //   },
-    //   (err) => {
-    //     console.log("Main. Error: ", err);
-    //   }
-    // );
+    this.messagesLoading = true;
     axios.get("http://localhost:8080/api/messages").then(
       (res) => {
         res.data.forEach((el) => {
           this.messages.push(el);
         });
+
+        this.messagesLoading = false;
       },
       (err) => {
         console.log("Main. Error: ", err);
+        this.messagesLoading = false;
       }
     );
   },
@@ -109,7 +120,10 @@ export default {
   grid-template-columns: 1.4fr 6fr;
   width: 100vw;
   /* max-height: 100vh; */
-  min-height: calc(100vh - 30px);
+  min-height: 100vh;
+}
+.main-panel-nonscroll {
+  overflow-y: hidden !important;
 }
 .main {
   display: grid;
@@ -123,13 +137,13 @@ export default {
 }
 .info-block {
   border: 1px solid #000;
-  height: calc(100vh - 45px - 45px);
+  height: calc(100vh - 70px);
   background-color: #c4c4c4;
   overflow-y: auto;
 }
 .bottom-btn {
   position: absolute;
-  bottom: 44px;
+  bottom: 24px;
   z-index: 200;
   left: 0;
   width: calc(100% - 10px);

@@ -22,7 +22,7 @@ export default {
   name: "AdminPanel",
   data() {
     return {
-      isAdmin: true,
+      isAdmin: false,
     };
   },
   methods: {
@@ -33,6 +33,23 @@ export default {
 };
 </script>
 <style scoped>
+#admin-panel {
+  height: 30px;
+  width: 100vw;
+  background-color: #b8b8b8;
+  font-family: "Montserrat Regular";
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-start;
+  position: fixed;
+  z-index: 1000;
+}
+#admin-panel * {
+  display: block;
+  max-height: 30px;
+  margin: 5px 10px;
+  margin-right: 15px;
+}
 .admin-panel-btn {
   background-color: transparent;
   border: 1px solid #000;
@@ -42,8 +59,15 @@ export default {
   right: 0;
   height: 24px;
   margin-top: 3px;
-  margin-right: 10px;
+  margin-right: 1rem;
   box-sizing: border-box;
+  z-index: 10000;
+  cursor: pointer;
+  opacity: 0;
+  transition: 0.1s ease-out;
+}
+.admin-panel-btn:hover {
+  opacity: 1;
 }
 .btn-bg-show {
   background-color: #c4c4c4;
