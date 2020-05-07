@@ -132,7 +132,16 @@ export default {
 .nav-link.router-link-active::after {
   top: calc(100%);
 }
-.nav-link:visited {
+a.nav-link {
+  color: #000;
+}
+a.nav-link:visited {
+  color: #000;
+}
+a.nav-link:hover {
+  color: #000;
+}
+a.nav-link:active {
   color: #000;
 }
 .nav-link span {

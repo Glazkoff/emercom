@@ -120,7 +120,10 @@
         </div>
         <div class="request-side">
           <div class="devices-list-wrap">
-            <button disabled>Добавить устройство</button>
+            <button @click="addDevice()">Добавить устройство</button>
+            <div class="loading-box" v-if="devicesLoading">
+              <loading></loading>
+            </div>
             <div
               class="devices-list-block"
               v-for="(depdevice, index) in department_devices"
@@ -129,6 +132,7 @@
               <button class="list-btn" @click="addToChecked(index)">
                 Добавить в заявку
               </button>
+
               <div class="list-data">
                 <div class="data-title">
                   {{ depdevice.name }} (#{{ depdevice.device_id }})
@@ -143,11 +147,84 @@
         </div>
       </div>
     </div>
+    <div
+      class="modal-wrap"
+      v-if="modal"
+      @click.self="closeModal()"
+      tabindex="0"
+    >
+      <div class="outer">
+        <div class="relative">
+          <button class="deleteBtn" @click="closeModal()">
+            &times;
+          </button>
+          <div class="inner">
+            <div>
+              <h2>Добавить устройство</h2>
+              <div class="input-form">
+                <label for="new_device.name">Название</label>
+                <input
+                  type="text"
+                  id="new_device.name"
+                  placeholder="Название устройства"
+                  v-model="new_device.name"
+                />
+                <!-- <small>Добавлено автоматически</small> -->
+              </div>
+              <div class="input-form">
+                <label for="new_device.characteristics"
+                  >Характеристики устройства</label
+                >
+                <input
+                  type="text"
+                  id="new_device.characteristics"
+                  placeholder="Название устройства"
+                  v-model="new_device.characteristics"
+                />
+                <!-- <small>Добавлено автоматически</small> -->
+              </div>
+              <div class="input-form">
+                <label for="new_device.characteristics"
+                  >Типы обслуживания</label
+                >
+                <div
+                  class="input-form types"
+                  v-for="(type, index) in new_device.types"
+                  :key="index"
+                >
+                  <label>Тип #{{ type.type + 1 }}</label>
+                  <input
+                    type="text"
+                    placeholder="Тип обслуживания"
+                    v-model="new_device.types[index].description"
+                  />
+                  <button
+                    class="deleteBtn delete-type"
+                    @click="deleteType(index)"
+                  >
+                    &times;
+                  </button>
+                </div>
+
+                <small @click="addType()" class="btn-small"
+                  >+ Добавить тип</small
+                >
+              </div>
+              <div class="input-form">
+                <button @click="sendDevice()">Добавить</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Sidepanel from "@/components/Sidepanel.vue";
+import Loading from "@/components/Loading.vue";
+
 import axios from "axios";
 export default {
   name: "Write",
@@ -155,80 +232,66 @@ export default {
     return {
       success: false,
       error: false,
+      modal: false,
       fio: "",
       department_id: -1,
-      department_devices: [
-        // {
-        //   device_id: 112233,
-        //   name: "ПК #112233",
-        //   characteristics:
-        //     "Текст, текст, текст, текст. Текст, текст, текст, текст.",
-        //   types: [
-        //     {
-        //       type: 0,
-        //       description: "Установка Windows",
-        //     },
-        //     {
-        //       type: 1,
-        //       description: "Обслуживание",
-        //       checked: true,
-        //     },
-        //     {
-        //       type: 2,
-        //       description: "Устранение неполадок",
-        //     },
-        //   ],
-        //   comment: "Комментарий к устройству",
-        // },
-        // {
-        //   device_id: 512383,
-        //   name: "МФУ #512383",
-        //   characteristics:
-        //     "Текст, текст, текст, текст. Текст, текст, текст, текст.",
-        //   types: [
-        //     {
-        //       type: 0,
-        //       description: "Заправка картриджа",
-        //     },
-        //     {
-        //       type: 1,
-        //       description: "Обслуживание",
-        //     },
-        //     {
-        //       type: 2,
-        //       description: "Устранение неполадок",
-        //     },
-        //   ],
-        //   comment: "Комментарий к устройству",
-        // },
-        // {
-        //   device_id: 512384,
-        //   name: "МФУ #512384",
-        //   characteristics:
-        //     "Текст, текст, текст, текст. Текст, текст, текст, текст.",
-        //   types: [
-        //     {
-        //       type: 0,
-        //       description: "Заправка картриджа",
-        //     },
-        //     {
-        //       type: 1,
-        //       description: "Обслуживание",
-        //     },
-        //     {
-        //       type: 2,
-        //       description: "Устранение неполадок",
-        //     },
-        //   ],
-        //   comment: "Комментарий к устройству",
-        // },
-      ],
+      new_device: {
+        name: "",
+        characteristics: "",
+        types: [
+          {
+            type: 0,
+            description: "",
+          },
+        ],
+        department_id: -1,
+      },
+      department_devices: [],
       checked_service: [],
       checked_devices: [],
       common_comment: "",
+      devicesLoading: false,
     };
   },
   methods: {
+    addDevice() {
+      this.modal = true;
+    },
+    addType() {
+      let newType = {
+        type: this.new_device.types.length,
+        description: "",
+      };
+      this.new_device.types.push(newType);
+    },
+    closeModal() {
+      this.modal = false;
+    },
+    deleteType(index) {
+      this.new_device.types.splice(index, 1);
+      let i = 0;
+      this.new_device.types.map((el) => {
+        el.type = i;
+        i++;
+        return el;
+      });
+    },
+    sendDevice() {
+      this.new_device.department_id = this.department_id;
+      axios.post("http://localhost:8080/api/devices", this.new_device).then(
+        (res) => {
+          console.log(res);
+          if (res.status == 200) {
+            this.success = true;
+          }
+        },
+        (err) => {
+          console.log("Write. Error: ", err);
+        }
+      );
+      this.modal = false;
+      this.getDevices();
+    },
     addToChecked(index) {
       console.log(this.department_devices[index]);
       this.checked_service[this.department_devices[index].device_id] = 0;
@@ -283,25 +346,33 @@ export default {
       this.checked_devices = [];
       this.common_comment = "";
     },
+    getDevices() {
+      this.department_devices = [];
+      this.devicesLoading = true;
+      axios.get("http://localhost:8080/api/devices").then(
+        (res) => {
+          res.data.forEach((el) => {
+            el.comment = "";
+            this.department_devices.push(el);
+            console.log(el);
+          });
+          this.devicesLoading = false;
+        },
+        (err) => {
+          console.log("Write. Error: ", err);
+          this.devicesLoading = false;
+        }
+      );
+    },
   },
   components: {
     Sidepanel,
+    Loading,
   },
   mounted() {
     this.fio = localStorage.getItem("fio");
     this.department_id = localStorage.getItem("department-id");
-    axios.get("http://localhost:8080/api/devices").then(
-      (res) => {
-        res.data.forEach((el) => {
-          el.comment = "";
-          this.department_devices.push(el);
-          console.log(el);
-        });
-      },
-      (err) => {
-        console.log("Write. Error: ", err);
-      }
-    );
+    this.getDevices();
   },
 };
 </script>
@@ -539,5 +610,16 @@ button:active.deleteBtn {
 }
 .push-success {
   background-color: rgb(188, 226, 188);
+}
+.btn-small {
+  cursor: pointer;
+}
+.types {
+  position: relative;
+}
+.input-form button.deleteBtn.delete-type {
+  left: 70%;
+  bottom: 0.2rem;
+  top: unset;
 }
 </style>

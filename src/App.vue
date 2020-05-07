@@ -189,4 +189,89 @@ button:active.deleteBtn {
 .loading-box > * {
   margin: 10vh auto;
 }
+.modal-wrap {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s ease;
+  display: flex;
+}
+.outer {
+  margin: auto auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  padding: 2rem;
+  padding-top: 2.5rem;
+  padding-bottom: 1rem;
+  padding-right: 3rem;
+  max-width: 50vw;
+  min-width: 40vw;
+  /* height: 50vh; */
+  max-height: 70vh;
+  background-color: #fff;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  position: relative;
+}
+.relative {
+  /* position: relative; */
+}
+.inner {
+  width: 100%;
+  height: 50vh;
+  padding-right: 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+.inner p {
+  margin: 0.5rem;
+}
+.inner h2 {
+  margin-top: 0.8rem;
+}
+.inner h4 {
+  margin-top: 0.8rem;
+  margin-bottom: 0;
+}
+.outer .deleteBtn {
+  top: 12px;
+  right: 12px;
+  position: absolute;
+  display: block;
+}
+/* .outer > *:not(.deleteBtn) {
+  width: 100%;
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+.outer > h1,
+.outer > p {
+  display: block;
+} */
+.modal-btn-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+.modal-btn-wrap button {
+  border: none;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.1rem;
+  width: 100%;
+  cursor: pointer;
+  font-family: "Montserrat Medium";
+  color: #fff;
+  background-color: #c44536;
+  border-radius: 4px;
+  text-transform: uppercase;
+  outline: none;
+}
+.modal-btn-wrap button:hover {
+  box-shadow: 0px 2px 8px #a73b2f;
+}
 </style>

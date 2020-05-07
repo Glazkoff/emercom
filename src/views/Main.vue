@@ -26,15 +26,33 @@
           <router-link to="write" tag="button" class="add-btn rounded-corners"
             ><span class="nav-logo cross"></span>Добавить заявку</router-link
           >
-          <div class="loading-box">
+          <div class="loading-box" v-if="requestsLoading">
             <Loading></Loading>
           </div>
-          <div class="message-box rounded-corners">
-            <button class="delete-btn">Отменить</button>
-            <h4>08.02.2020, 13:45</h4>
-            <h3>Заявка №773</h3>
-            <p>ПК #342325<br />Принтер #342323<br />Статус: на рассмотрении</p>
-            <button class="more-btn">Подробнее →</button>
+          <div
+            class="message-box rounded-corners"
+            v-for="(request, index) in activeReq"
+            :key="index"
+            :class="{
+              'considiration-box': request.status === 'На рассмотрении',
+              'inwork-box': request.status === 'В работе',
+              'rejected-box': request.status === 'Отклонено',
+              'completed-box': request.status === 'Завершено',
+            }"
+          >
+            <!-- <div class="btn-wrap">
+              <button class="delete-btn">Отменить</button>
+            </div> -->
+            <h4>{{ dateformat(request.timestamp) }}</h4>
+            <h3>Заявка №{{ request.request_id }}</h3>
+            <p>
+              <span v-for="(type, index) in request.content" :key="index">
+                {{ type.name }}<br /></span
+              ><br />Статус: {{ request.status }}
+            </p>
+            <div class="btn-wrap">
+              <button class="more-btn">Подробнее →</button>
+            </div>
           </div>
         </div>
         <div class="bottom-btn">
@@ -44,13 +62,27 @@
       <div class="col">
         <h2>Архив заявок</h2>
         <div class="info-block scroll-bar rounded-corners">
-          <div class="loading-box">
+          <div class="loading-box" v-if="requestsLoading">
             <Loading></Loading>
           </div>
-          <div class="message-box rounded-corners">
-            <h4>08.02.2020, 13:45</h4>
-            <h3>Заявка №773</h3>
-            <p>ПК #342325<br />Принтер #342323<br />Статус: на рассмотрении</p>
+          <div
+            class="message-box rounded-corners"
+            v-for="(request, index) in archieveReq"
+            :key="index"
+            :class="{
+              'considiration-box': request.status === 'На рассмотрении',
+              'inwork-box': request.status === 'В работе',
+              'rejected-box': request.status === 'Отклонено',
+              'completed-box': request.status === 'Завершено',
+            }"
+          >
+            <h4>{{ dateformat(request.timestamp) }}</h4>
+            <h3>Заявка №{{ request.request_id }}</h3>
+            <p>
+              <span v-for="(type, index) in request.content" :key="index">
+                {{ type.name }}<br /></span
+              ><br />Статус: {{ request.status }}
+            </p>
             <div class="btn-wrap">
               <button class="more-btn">Подробнее →</button>
             </div>
@@ -70,6 +102,7 @@ import MessageBox from "@/components/MessageBox.vue";
 import Loading from "@/components/Loading.vue";
 import axios from "axios";
 import JWT from "jwt-client";
+import moment from "moment";
 
 export default {
   name: "Main",
@@ -81,6 +114,8 @@ export default {
   data() {
     return {
       messages: [],
+      activeReq: [],
+      archieveReq: [],
       messagesLoading: false,
       requestsLoading: false,
     };
@@ -96,6 +131,7 @@ export default {
   },
   mounted() {
     this.messagesLoading = true;
+    this.requestsLoading = true;
     axios.get("http://localhost:8080/api/messages").then(
       (res) => {
         res.data.forEach((el) => {
@@ -109,6 +145,28 @@ export default {
         this.messagesLoading = false;
       }
     );
+    axios.get("http://localhost:8080/api/requests").then(
+      (res) => {
+        res.data.forEach((el) => {
+          if (el.status === "Завершено") {
+            this.archieveReq.push(el);
+          } else {
+            this.activeReq.push(el);
+          }
+        });
+        this.requestsLoading = false;
+      },
+      (err) => {
+        console.log("Main. Error: ", err);
+        this.requestsLoading = false;
+      }
+    );
+  },
+  methods: {
+    dateformat(date) {
+      moment.locale("ru");
+      return moment(date).format("lll");
+    },
   },
 };
 </script>
@@ -241,15 +299,14 @@ export default {
   text-decoration: underline;
   background: none;
   border: 0px;
-  /* margin-left: calc(72%); */
   cursor: pointer;
   outline: 0px;
+  display: block;
 }
 .btn-wrap {
   display: flex;
   justify-content: flex-end;
 }
 .more-btn {
-  /* margin-left: calc(60%); */
 }
 </style>

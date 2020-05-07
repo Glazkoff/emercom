@@ -503,9 +503,46 @@ app.get("/api/devices", (req, res) => {
     });
   }
 });
-// app.post("/api/devices", (req, res) => {
+app.post("/api/devices", (req, res) => {
+  if (req.headers["authorization"]) {
+    try {
+      jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+        err,
+        decoded
+      ) {
+        if (err) {
+          return res.status(401).send({
+            auth: false,
+            message: "Ошибка аутентификации токена"
+          });
+        } else {
+          console.log(decoded);
+          try {
+            pool.query(
+              "INSERT INTO `devices` () VALUES ()",
+              [
+                decoded.department_id
+              ],
+              (err, result) => {
+                res.send(result);
+              })
+          } catch (error) {
+            console.log(error);
 
-// });
+          }
+          // res.send(decoded)
+        }
+      })
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    return res.status(401).send({
+      auth: false,
+      message: "Ошибка аутентификации токена"
+    });
+  }
+});
 
 // TODO: add put devices
 // app.put("/api/devices", (req, res) => { });
