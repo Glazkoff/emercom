@@ -263,7 +263,23 @@ app.get("/api/requests", (req, res) => {
                 res.json(result);
               }
             });
+          } else if (req.query.attached) {
+            pool.query(
+              "SELECT * FROM `requests` WHERE executor_id = ?",
+              [decoded.user_id],
+              (err, result) => {
+                if (err) {
+                  console.log(err);
+                  res.status(500).send("Ошибка на сервере");
+                } else {
+                  console.log("Результат запроса к БД:");
+                  console.log(result);
+                  res.json(result);
+                }
+              }
+            );
           } else {
+            console.log(req.query);
             console.log(decoded);
             pool.query(
               "SELECT * FROM `requests` WHERE department_id = ?",

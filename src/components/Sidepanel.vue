@@ -42,12 +42,29 @@
         <div class="white-spacer"></div>
       </div>
       <div class="link-wrapper">
-        <!-- <router-link exact="true" to="/" class="nav-link"
-          ><span class="nav-logo "></span><span>Выйти</span></router-link
+        <router-link to="attached" class="nav-link"
+          ><span class="nav-logo list"></span
+          ><span>Прикреплённые заявки</span></router-link
         >
-        <div class="white-spacer"></div> -->
-        <button @click="logout()" class="logout-btn"><span>Выйти</span></button>
+        <div class="white-spacer"></div>
       </div>
+      <div class="link-wrapper">
+        <router-link to="toattach" class="nav-link"
+          ><span class="nav-logo list"></span
+          ><span>Прикрепить заявку</span></router-link
+        >
+        <div class="white-spacer"></div>
+      </div>
+      <div class="link-wrapper">
+        <router-link to="useredit" class="nav-link"
+          ><span class="nav-logo list"></span
+          ><span>Редактирование пользователей</span></router-link
+        >
+        <div class="white-spacer"></div>
+      </div>
+    </div>
+    <div class="link-wrapper">
+      <button @click="logout()" class="logout-btn"><span>Выйти</span></button>
     </div>
   </div>
 </template>
@@ -68,12 +85,13 @@ export default {
 <style>
 #side-panel {
   background-color: #8b8b8b;
-  height: 100%;
+  height: 100vh;
 }
 #side-panel .logo {
   margin-left: 0.8rem;
   margin-top: 0.8rem;
-  margin-bottom: 60px;
+  height: 60px;
+  /* margin-bottom: 60px; */
 }
 #side-panel .logo-img {
   width: 40px;
@@ -83,7 +101,15 @@ export default {
   font-size: 1.1rem;
   cursor: pointer;
 }
-
+.nav-wrapper {
+  height: calc(100vh - 1.6rem - 60px - 9rem);
+  overflow-y: auto;
+  padding-top: 60px;
+  direction: rtl;
+}
+.nav-wrapper > * {
+  direction: ltr;
+}
 .nav-link,
 .logout-btn {
   display: block;
@@ -110,7 +136,7 @@ export default {
   border-top: 1px solid rgba(0, 0, 0, 0.3);
   border-radius: 0;
   margin-left: 0;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
   font-size: 0.9rem;
 }
 .nav-link.router-link-active {

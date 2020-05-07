@@ -7,7 +7,11 @@ import List from "../components/List.vue";
 import NewMessage from "../components/NewMessage.vue";
 import History from "../components/History.vue";
 import Write from "../components/Write.vue";
+import AttachedRequests from "../components/AttachedRequests.vue";
+import ToAttach from "../components/ToAttach.vue";
+import UserEdit from "../components/UserEdit.vue";
 import store from '../store/index'
+
 
 Vue.use(VueRouter);
 
@@ -64,6 +68,24 @@ const routes = [{
     path: "/newmessage",
     name: "NewMessage",
     component: NewMessage,
+    beforeEnter: ifAuthenticated
+  },
+  {
+    path: '/attached',
+    name: "Attached",
+    component: AttachedRequests,
+    beforeEnter: ifAuthenticated
+  },
+  {
+    path: '/toattach',
+    name: 'ToAttach',
+    component: ToAttach,
+    beforeEnter: ifAuthenticated
+  },
+  {
+    path: '/useredit',
+    name: "UserEdit",
+    component: UserEdit,
     beforeEnter: ifAuthenticated
   },
   {
