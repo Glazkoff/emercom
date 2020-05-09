@@ -8,6 +8,7 @@ const dbConfig = require("./db.config.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const CONFIG = require("./secret.config");
+const morgan = require("morgan");
 
 const app = express();
 const expressWs = require("express-ws")(app);
@@ -21,6 +22,9 @@ app.use(
     extended: true
   })
 );
+
+// Логирование запросов
+app.use(morgan("common"));
 
 // Обработка статических файлов
 app.use("/", serveStatic(path.join(__dirname, "../dist")));
@@ -114,6 +118,80 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
+app.get("/api/users", (req, res) => {
+  try {
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+      err,
+      decoded
+    ) {
+      if (err) {
+        return res.status(401).send({
+          auth: false,
+          message: "Ошибка аутентификации токена"
+        });
+      } else {
+        console.log("GET");
+        try {
+          pool.query(
+            "SELECT * FROM `users`",
+            (err, result) => {
+              if (err) {
+                console.log(err);
+                res.status(500).send("Ошибка на сервере");
+              } else {
+                console.log("Результат запроса к БД:");
+                console.log(result);
+                res.json(result);
+              }
+            }
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// Получить исполнителей 
+app.get("/api/executors", (req, res) => {
+  try {
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+      err,
+      decoded
+    ) {
+      if (err) {
+        return res.status(401).send({
+          auth: false,
+          message: "Ошибка аутентификации токена"
+        });
+      } else {
+        console.log("GET");
+        try {
+          pool.query(
+            "SELECT `user_id`, `fio`, `role`, `department_id` FROM `users` WHERE role = 'admin' OR role = 'employee'",
+            (err, result) => {
+              if (err) {
+                console.log(err);
+                res.status(500).send("Ошибка на сервере");
+              } else {
+                console.log("Результат запроса к БД:");
+                console.log(result);
+                res.json(result);
+              }
+            }
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
 // Обработка регистрации
 app.post("/api/register", (req, res) => {
   console.log(req.body);
@@ -305,8 +383,60 @@ app.get("/api/requests", (req, res) => {
     console.log(err);
   }
 });
-// TODO: add put requests
-// app.put("/api/requests", (req, res) => { });
+
+app.put("/api/requests/:id", (req, res) => {
+  try {
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+      err,
+      decoded
+    ) {
+      if (err) {
+        return res.status(401).send({
+          auth: false,
+          message: "Ошибка аутентификации токена"
+        });
+      } else {
+        try {
+          if (req.query.executor) {
+            pool.query(
+              "UPDATE `requests` SET executor_id = ?, status = ? WHERE request_id = ?",
+              [req.body.executor_id, "В работе", req.params.id],
+              (err, result) => {
+                if (err) {
+                  console.log(err);
+                  res.status(500).send("Ошибка на сервере");
+                } else {
+                  console.log("Результат запроса к БД:");
+                  console.log(result);
+                  res.json(result);
+                }
+              }
+            );
+          } else if (req.query.status) {
+            pool.query(
+              "UPDATE `requests` SET status = ? WHERE request_id = ?",
+              [req.body.status, req.params.id],
+              (err, result) => {
+                if (err) {
+                  console.log(err);
+                  res.status(500).send("Ошибка на сервере");
+                } else {
+                  console.log("Результат запроса к БД:");
+                  console.log(result);
+                  res.json(result);
+                }
+              }
+            );
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 app.delete("/api/requests/:id", (req, res) => {
   jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
@@ -442,16 +572,19 @@ app.get("/api/messages", (req, res) => {
                 }
               );
             } else {
-              pool.query("SELECT * FROM `messages` ORDER BY type, message_id DESC", (err, result) => {
-                if (err) {
-                  console.log(err);
-                  res.status(500).send("Ошибка на сервере");
-                } else {
-                  console.log("Результат запроса к БД:");
-                  console.log(result);
-                  res.json(result);
+              pool.query(
+                "SELECT * FROM `messages` ORDER BY type, message_id DESC",
+                (err, result) => {
+                  if (err) {
+                    console.log(err);
+                    res.status(500).send("Ошибка на сервере");
+                  } else {
+                    console.log("Результат запроса к БД:");
+                    console.log(result);
+                    res.json(result);
+                  }
                 }
-              });
+              );
             }
           } catch (error) {
             console.log(error);
@@ -496,19 +629,17 @@ app.get("/api/devices", (req, res) => {
           try {
             pool.query(
               "SELECT * FROM `devices` WHERE department_id = ?",
-              [
-                decoded.department_id
-              ],
+              [decoded.department_id],
               (err, result) => {
                 res.send(result);
-              })
+              }
+            );
           } catch (error) {
             console.log(error);
-
           }
           // res.send(decoded)
         }
-      })
+      });
     } catch (err) {
       console.log(err);
     }
@@ -536,19 +667,17 @@ app.post("/api/devices", (req, res) => {
           try {
             pool.query(
               "INSERT INTO `devices` () VALUES ()",
-              [
-                decoded.department_id
-              ],
+              [decoded.department_id],
               (err, result) => {
                 res.send(result);
-              })
+              }
+            );
           } catch (error) {
             console.log(error);
-
           }
           // res.send(decoded)
         }
-      })
+      });
     } catch (err) {
       console.log(err);
     }
@@ -565,7 +694,6 @@ app.post("/api/devices", (req, res) => {
 
 // TODO: add delete devices
 // app.delete("/api/devices", (req, res) => { });
-
 
 app.get("/test", (req, res) => {
   console.log(req.headers);

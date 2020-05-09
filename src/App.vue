@@ -274,4 +274,43 @@ button:active.deleteBtn {
 .modal-btn-wrap button:hover {
   box-shadow: 0px 2px 8px #a73b2f;
 }
+.modal-btn-wrap button.btn-primary {
+  background-color: #3650c4;
+  margin-top: 1rem;
+}
+.modal-btn-wrap button.btn-primary:hover {
+  box-shadow: 0px 2px 8px #2f37a7;
+}
+.modal-btn-wrap button.btn-primary:disabled {
+  background-color: #687bd3;
+}
+.modal-btn-wrap button.btn-primary:disabled:hover {
+  box-shadow: unset;
+}
+table {
+  border-collapse: collapse;
+}
+.requests-list td,
+.requests-list th,
+.users-list td,
+.users-list th {
+  padding: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+.requests-list tr {
+  display: table-row;
+}
+
+.requests-list td .input-form {
+  margin-left: 0;
+  margin-bottom: 0;
+}
+.requests-list td .input-form button {
+  width: 100%;
+}
+.requests-list,
+.users-list {
+  width: 100%;
+  overflow-x: auto;
+}
 </style>
