@@ -270,11 +270,11 @@ export default {
 .requests-wrap > div:last-child > h3::after {
   display: block;
   height: 100%;
-  width: 0.5rem;
+  width: 0.2rem;
   background-color: #fff;
   content: "";
   position: absolute;
-  right: -0.5rem;
+  right: -0.2rem;
   top: 0;
 }
 .considiration > .request-box,
@@ -283,17 +283,17 @@ export default {
 }
 .rejected > .request-box,
 .rejected-box {
-  background-color: #ffafa6;
+  background-color: #ffbebe;
 }
 .inwork > .request-box,
 .inwork-box {
-  background-color: #dcf2b0;
+  background-color: #c2ffc2;
 }
 .completed > .request-box,
 .completed-box {
-  background-color: #bde5ea;
+  background-color: #c2c2ff;
 }
-
+/* 
 ::-webkit-scrollbar {
   width: 12px;
 }
@@ -315,5 +315,5 @@ export default {
 ::-webkit-scrollbar-track:hover {
   border-left: solid 1px #aaa;
   background-color: #eee;
-}
+} */
 </style>

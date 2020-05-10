@@ -2,7 +2,10 @@
   <div class="main-screen" @keydown.esc="closeModal()">
     <Sidepanel></Sidepanel>
     <div class="main-panel">
-      <div class="attached-wrap">
+      <div class="loading-box" v-if="loading">
+        <Loading></Loading>
+      </div>
+      <div class="attached-wrap" v-else>
         <h3>К вам прикреплены следующие заявки:</h3>
         <!-- <div class="requests-list">
           <table>
@@ -90,16 +93,19 @@
 
 <script>
 import Sidepanel from "@/components/Sidepanel.vue";
+import Loading from "@/components/Loading.vue";
 import axios from "axios";
 import moment from "moment";
 export default {
   name: "Attached",
   components: {
     Sidepanel,
+    Loading,
   },
   data() {
     return {
       requests: [],
+      loading: false,
     };
   },
   methods: {
@@ -132,14 +138,17 @@ export default {
     },
   },
   async mounted() {
+    this.loading = true;
     axios.get("http://localhost:8080/api/requests?attached=true").then(
       (res) => {
         res.data.forEach((el) => {
           this.requests.push(el);
         });
+        this.loading = false;
       },
       (err) => {
         console.log("Main. Error: ", err);
+        this.loading = false;
       }
     );
   },

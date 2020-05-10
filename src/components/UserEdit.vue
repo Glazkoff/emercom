@@ -2,7 +2,10 @@
   <div class="main-screen" @keydown.esc="closeModal()">
     <Sidepanel></Sidepanel>
     <div class="main-panel">
-      <div class="users-wrap">
+      <div class="loading-box" v-if="loading">
+        <Loading></Loading>
+      </div>
+      <div class="users-wrap" v-else>
         <h3>Пользователи</h3>
         <div class="input-form">
           <button @click="addUser()">Добавить пользователя</button>
@@ -190,6 +193,7 @@ export default {
   data() {
     return {
       users: [],
+      loading: false,
       user_modal: false,
       userLoading: false,
       userSuccess: false,
@@ -303,15 +307,18 @@ export default {
       );
     },
     getUsers() {
+      this.loading = true;
       this.users = [];
       axios.get("http://localhost:8080/api/users").then(
         (res) => {
           res.data.forEach((el) => {
             this.users.push(el);
           });
+          this.loading = false;
         },
         (err) => {
           console.log("Main. Error: ", err);
+          this.loading = false;
         }
       );
     },

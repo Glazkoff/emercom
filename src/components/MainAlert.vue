@@ -68,5 +68,6 @@ export default {
 }
 .alerts-title {
   height: 1.5rem;
+  color: #fff;
 }
 </style>

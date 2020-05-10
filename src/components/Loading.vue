@@ -20,7 +20,7 @@ export default {
 }
 .lds-ripple div {
   position: absolute;
-  border: 4px solid rgb(46, 46, 46);
+  border: 4px solid #0a3d62;
   opacity: 1;
   border-radius: 50%;
   animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;

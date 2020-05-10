@@ -95,7 +95,10 @@
                   <!-- <small>Добавлено автоматически</small> -->
                 </div>
               </div>
-              <button class="deleteBtn" @click="deleteFromChecked(index)">
+              <button
+                class="deleteBtn"
+                @click="deleteFromChecked(index, device.device_id)"
+              >
                 &times;
               </button>
             </div>
@@ -247,7 +250,7 @@ export default {
         department_id: -1,
       },
       department_devices: [],
-      checked_service: [],
+      checked_service: {},
       checked_devices: [],
       common_comment: "",
       devicesLoading: false,
@@ -300,8 +303,8 @@ export default {
       this.checked_devices.push(this.department_devices[index]);
       this.department_devices.splice(index, 1);
     },
-    deleteFromChecked(index) {
-      this.checked_service.splice(index, 1);
+    deleteFromChecked(index, deviceId) {
+      this.checked_service[deviceId] = undefined;
       this.department_devices.push(this.checked_devices[index]);
       this.checked_devices.splice(index, 1);
     },
@@ -391,7 +394,7 @@ export default {
   padding: 1rem 1.5rem;
 }
 .request-wrap {
-  background-color: #c4c4c4;
+  background-color: #d2dae6;
   margin: 0 auto;
   border-radius: 8px;
   width: 94%;
@@ -480,7 +483,7 @@ button {
 }
 .input-form button,
 .devices-list-wrap button:not(.list-btn) {
-  background-color: #737373;
+  background-color: rgba(30, 55, 153, 1);
   border: 0px;
   border-radius: 8px;
   font-family: "Montserrat Regular";
@@ -491,16 +494,17 @@ button {
   outline: 0px;
   transition: 0.02s;
 }
-button:disabled {
-  background-color: #b8b8b8;
+button:disabled,
+.input-form button:disabled:hover {
+  background-color: rgb(56, 72, 112);
 }
 .input-form button:hover,
 .devices-list-wrap button:hover:not(.list-btn) {
-  background-color: #949393;
+  background-color: rgba(12, 36, 97, 1);
 }
 .input-form button:active,
 .devices-list-wrap button:active:not(.list-btn) {
-  background-color: #575757;
+  background-color: rgba(60, 99, 130, 1);
   box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.4);
 }
 .devices-list-wrap button:disabled {
@@ -567,6 +571,7 @@ button:active.deleteBtn {
   background-color: #f2f2f2;
   border-radius: 8px;
   padding: 0.8rem;
+  width: 100%;
 }
 .data-title {
   font-family: "Montserrat Medium";
@@ -576,7 +581,7 @@ button:active.deleteBtn {
 .data-description {
   font-size: 0.9rem;
 }
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 12px;
 }
 ::-webkit-scrollbar-thumb {
@@ -597,7 +602,7 @@ button:active.deleteBtn {
 ::-webkit-scrollbar-track:hover {
   border-left: solid 1px #aaa;
   background-color: #eee;
-}
+} */
 .push {
   border: 1px solid rgba(0, 0, 0, 0.9);
   margin: 0 auto;
@@ -610,11 +615,14 @@ button:active.deleteBtn {
   margin-left: 0;
   margin-bottom: 0;
 }
+.push .btn-row button {
+  background-color: rgba(56, 173, 169, 1);
+}
 .push .btn-row *:not(:last-child) {
   margin-right: 0.5rem;
 }
 .push-success {
-  background-color: rgb(188, 226, 188);
+  background-color: rgba(184, 233, 148, 1);
 }
 .btn-small {
   cursor: pointer;

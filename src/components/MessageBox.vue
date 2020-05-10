@@ -29,7 +29,7 @@ export default {
   box-sizing: border-box;
 }
 .important {
-  background-color: #fff975;
+  background-color: #ffff99;
 }
 .important h3 {
   color: #7c0202;

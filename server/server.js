@@ -674,7 +674,8 @@ app.get("/api/messages", (req, res) => {
               );
             } else {
               pool.query(
-                "SELECT * FROM `messages` ORDER BY type, message_id DESC",
+                "SELECT * FROM `messages` WHERE (broadcast='common') OR (type='personal' AND destination_id=?) ORDER BY type, message_id DESC",
+                [decoded.user_id],
                 (err, result) => {
                   if (err) {
                     console.log(err);

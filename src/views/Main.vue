@@ -29,29 +29,31 @@
           <div class="loading-box" v-if="requestsLoading">
             <Loading></Loading>
           </div>
-          <div
-            class="message-box rounded-corners"
-            v-for="(request, index) in activeReq"
-            :key="index"
-            :class="{
-              'considiration-box': request.status === 'На рассмотрении',
-              'inwork-box': request.status === 'В работе',
-              'rejected-box': request.status === 'Отклонено',
-              'completed-box': request.status === 'Завершено',
-            }"
-          >
-            <!-- <div class="btn-wrap">
+          <div class="messages" v-else>
+            <div
+              class="message-box rounded-corners"
+              v-for="(request, index) in activeReq"
+              :key="index"
+              :class="{
+                'considiration-box': request.status === 'На рассмотрении',
+                'inwork-box': request.status === 'В работе',
+                'rejected-box': request.status === 'Отклонено',
+                'completed-box': request.status === 'Завершено',
+              }"
+            >
+              <!-- <div class="btn-wrap">
               <button class="delete-btn">Отменить</button>
             </div> -->
-            <h4>{{ dateformat(request.timestamp) }}</h4>
-            <h3>Заявка №{{ request.request_id }}</h3>
-            <p>
-              <span v-for="(type, index) in request.content" :key="index">
-                {{ type.name }}<br /></span
-              ><br />Статус: {{ request.status }}
-            </p>
-            <div class="btn-wrap">
-              <button class="more-btn">Подробнее →</button>
+              <h4>{{ dateformat(request.timestamp) }}</h4>
+              <h3>Заявка №{{ request.request_id }}</h3>
+              <p>
+                <span v-for="(type, index) in request.content" :key="index">
+                  {{ type.name }}<br /></span
+                ><br />Статус: {{ request.status }}
+              </p>
+              <div class="btn-wrap">
+                <!-- <button class="more-btn">Подробнее →</button> -->
+              </div>
             </div>
           </div>
         </div>
@@ -65,26 +67,28 @@
           <div class="loading-box" v-if="requestsLoading">
             <Loading></Loading>
           </div>
-          <div
-            class="message-box rounded-corners"
-            v-for="(request, index) in archieveReq"
-            :key="index"
-            :class="{
-              'considiration-box': request.status === 'На рассмотрении',
-              'inwork-box': request.status === 'В работе',
-              'rejected-box': request.status === 'Отклонено',
-              'completed-box': request.status === 'Завершено',
-            }"
-          >
-            <h4>{{ dateformat(request.timestamp) }}</h4>
-            <h3>Заявка №{{ request.request_id }}</h3>
-            <p>
-              <span v-for="(type, index) in request.content" :key="index">
-                {{ type.name }}<br /></span
-              ><br />Статус: {{ request.status }}
-            </p>
-            <div class="btn-wrap">
-              <button class="more-btn">Подробнее →</button>
+          <div class="messages" v-else>
+            <div
+              class="message-box rounded-corners"
+              v-for="(request, index) in archieveReq"
+              :key="index"
+              :class="{
+                'considiration-box': request.status === 'На рассмотрении',
+                'inwork-box': request.status === 'В работе',
+                'rejected-box': request.status === 'Отклонено',
+                'completed-box': request.status === 'Завершено',
+              }"
+            >
+              <h4>{{ dateformat(request.timestamp) }}</h4>
+              <h3>Заявка №{{ request.request_id }}</h3>
+              <p>
+                <span v-for="(type, index) in request.content" :key="index">
+                  {{ type.name }}<br /></span
+                ><br />Статус: {{ request.status }}
+              </p>
+              <div class="btn-wrap">
+                <!-- <button class="more-btn">Подробнее →</button> -->
+              </div>
             </div>
           </div>
         </div>
@@ -154,6 +158,7 @@ export default {
             this.activeReq.push(el);
           }
         });
+        this.sortRequests();
         this.requestsLoading = false;
       },
       (err) => {
@@ -166,6 +171,26 @@ export default {
     dateformat(date) {
       moment.locale("ru");
       return moment(date).format("lll");
+    },
+    sortRequests() {
+      this.activeReq.sort((a, b) => {
+        if (a.timestamp > b.timestamp) {
+          return -1;
+        }
+        if (a.timestamp < b.timestamp) {
+          return 1;
+        }
+        return 0;
+      });
+      this.activeReq.sort((a, b) => {
+        if (a.status > b.status) {
+          return -1;
+        }
+        if (a.status < b.status) {
+          return 1;
+        }
+        return 0;
+      });
     },
   },
 };
@@ -196,7 +221,7 @@ export default {
 .info-block {
   border: 1px solid #000;
   height: calc(100vh - 70px);
-  background-color: #c4c4c4;
+  background-color: #f4f7fb;
   overflow-y: auto;
 }
 .bottom-btn {
@@ -207,8 +232,8 @@ export default {
   width: calc(100% - 10px);
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.6) 100%
+    rgba(10, 61, 98, 0.9) 0%,
+    rgba(74, 105, 189, 1) 100%
   );
   text-align: center;
   height: 40px;
@@ -237,12 +262,15 @@ export default {
 .col .message-box {
   width: unset;
 }
+.messages {
+  padding-bottom: 2rem;
+}
 .message-box,
 .add-btn {
   margin-top: 10px;
   margin-left: 10px;
   margin-right: 10px;
-  background-color: #f2f2f2;
+  background-color: #dfdfdf;
   box-sizing: border-box;
   padding: 16px;
 }
@@ -251,9 +279,18 @@ export default {
   width: calc(100% - 20px);
   font-family: "Montserrat Regular";
   font-size: 1.2rem;
-  background-color: #737373;
+  background-color: rgba(30, 55, 153, 1);
   color: #fff;
   cursor: pointer;
+  outline: none;
+  position: sticky;
+  top: 0.2rem;
+}
+.add-btn:hover {
+  background-color: rgba(74, 105, 189, 1);
+}
+.add-btn:active {
+  background-color: rgba(60, 99, 130, 1);
 }
 .message-box:last-child {
   margin-bottom: 20px;
@@ -274,21 +311,20 @@ export default {
 .scroll-bar::-webkit-scrollbar {
   width: 10px;
   background-color: #f5f5f5;
+  background: transparent;
 }
 .scroll-bar::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background: linear-gradient(left, #96a6bf, #63738c);
-  box-shadow: inset 0 0 1px 1px #5c6670;
+  background: linear-gradient(left, #c8cdd4, #c2c2ff);
 }
 
 .scroll-bar::-webkit-scrollbar-track {
   border-radius: 10px;
-  background: #eee;
-  box-shadow: 0 0 1px 1px #bbb, inset 0 0 7px rgba(0, 0, 0, 0.3);
+  background: #c2c2ff;
 }
 
 .scroll-bar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(left, #8391a6, #536175);
+  /* background: #a0a0f5; */
 }
 .bottom-btn a {
   color: #fff;

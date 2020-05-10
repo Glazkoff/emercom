@@ -85,11 +85,10 @@ body {
 }
 .split-screen-half {
   background-color: #e5e5e5;
-  /* width: 50vw; */
   display: flex;
 }
 .split-screen-half:nth-child(2) {
-  background-color: #d4d4d4;
+  background-color: #1e3799;
 }
 .centered-wrapper {
   margin: auto auto;
@@ -130,27 +129,25 @@ button:active.deleteBtn {
 }
 ::-webkit-scrollbar-thumb {
   border-width: 1px 1px 1px 2px;
-  border-color: #777;
-  background-color: #aaa;
+  border-color: #0c2461;
+  background-color: #6a89cc;
   border-radius: 8px;
   cursor: pointer;
 }
 ::-webkit-scrollbar-thumb:hover {
   border-width: 1px 1px 1px 2px;
-  border-color: #555;
-  background-color: #777;
+  border-color: #0c2461;
+  background-color: #264cad;
 }
 ::-webkit-scrollbar-track {
   border-width: 0;
 }
 ::-webkit-scrollbar-track:hover {
-  border-left: solid 1px #aaa;
-  background-color: #eee;
+  border-left: solid 1px #1e3799;
+  background-color: #8097c9;
 }
 .input-form .radio-point {
   display: flex;
-  /* height: 40px; */
-  /* margin-right: ; */
 }
 .input-form .radio-point input[type="radio"] {
   display: none;
@@ -173,9 +170,7 @@ button:active.deleteBtn {
   background-color: #0855ad;
   color: #fff;
   display: flex;
-  /* border: 1px solid #000; */
   border: none;
-  /* font-weight: bold; */
 }
 .input-form .radio-group {
   display: block;
@@ -184,7 +179,6 @@ button:active.deleteBtn {
 .loading-box {
   width: 100%;
   display: flex;
-  /* height: 20vh; */
 }
 .loading-box > * {
   margin: 10vh auto;
@@ -210,15 +204,11 @@ button:active.deleteBtn {
   padding-right: 3rem;
   max-width: 50vw;
   min-width: 40vw;
-  /* height: 50vh; */
   max-height: 70vh;
   background-color: #fff;
   overflow-x: hidden;
   box-sizing: border-box;
   position: relative;
-}
-.relative {
-  /* position: relative; */
 }
 .relative h2 {
   margin-top: 0;
@@ -246,15 +236,6 @@ button:active.deleteBtn {
   position: absolute;
   display: block;
 }
-/* .outer > *:not(.deleteBtn) {
-  width: 100%;
-  margin: 0;
-  margin-bottom: 0.5rem;
-}
-.outer > h1,
-.outer > p {
-  display: block;
-} */
 .modal-btn-wrap {
   width: 100%;
   display: flex;

@@ -2,7 +2,10 @@
   <div class="main-screen" @keydown.esc="closeModal()">
     <Sidepanel></Sidepanel>
     <div class="main-panel">
-      <div class="attached-wrap">
+      <div class="loading-box" v-if="loading">
+        <Loading></Loading>
+      </div>
+      <div class="attached-wrap" v-else>
         <h3>Список необработанных заявок:</h3>
         <div class="requests-list">
           <table>
@@ -185,6 +188,7 @@ export default {
       executorsLoading: false,
       executorid: -1,
       requestid: -1,
+      loading: false,
     };
   },
   methods: {
@@ -291,6 +295,7 @@ export default {
     },
   },
   async mounted() {
+    this.loading = true;
     axios.get("http://localhost:8080/api/requests").then(
       (res) => {
         res.data.forEach((el) => {
@@ -301,9 +306,11 @@ export default {
           }
         });
         this.sortReviewed();
+        this.loading = false;
       },
       (err) => {
         console.log("Main. Error: ", err);
+        this.loading = false;
       }
     );
   },

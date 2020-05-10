@@ -67,7 +67,7 @@
                   v-model="broadcast"
                 /><label for="common">Общая</label>
               </div>
-              <div class="radio-point">
+              <div class="radio-point" @click="loadUsers()">
                 <input
                   type="radio"
                   value="personal"
@@ -78,14 +78,28 @@
               </div>
             </div>
           </div>
-          <div class="input-form" v-if="broadcast !== 'common'">
+          <div class="input-form" v-if="broadcast !== 'common' && usersLoading">
+            <Loading></Loading>
+          </div>
+          <div
+            class="input-form"
+            v-if="broadcast !== 'common' && !usersLoading"
+          >
             <label for="destination_id">ID адресата</label>
-            <input
+            <!-- <input
               type="text"
               id="destination_id"
               placeholder="Введите заголовок"
               v-model="destination_id"
-            />
+            /> -->
+            <select name="" id="" v-model="destination_id">
+              <option
+                :value="user.user_id"
+                v-for="(user, index) in users"
+                :key="index"
+                >#{{ user.user_id }} - {{ user.fio }}</option
+              >
+            </select>
           </div>
           <div class="input-form">
             <!-- <label for="type">Тип сообщения</label> -->
@@ -123,9 +137,30 @@ export default {
       success: false,
       error: false,
       loading: false,
+      usersLoading: false,
+      users: [],
     };
   },
   methods: {
+    loadUsers() {
+      this.usersLoading = true;
+      this.users = [];
+      axios.get("http://localhost:8080/api/users").then(
+        (res) => {
+          res.data.forEach((el) => {
+            this.users.push(el);
+          });
+          this.usersLoading = false;
+          if (res.data.length !== 0) {
+            this.destination_id = res.data[0].user_id;
+          }
+        },
+        (err) => {
+          console.log("Main. Error: ", err);
+          this.usersLoading = false;
+        }
+      );
+    },
     sendMessage() {
       this.loading = true;
       let message = {
@@ -180,7 +215,7 @@ export default {
 .editor-wrap {
   width: 94%;
   margin: 0 auto;
-  background-color: #c4c4c4;
+  background-color: #d2dae6;
   border-radius: 8px;
   border: 1px solid #000;
   min-height: 80vh;

@@ -74,7 +74,7 @@ export default {
   display: flex;
   flex-direction: column;
   text-align: center;
-  background-color: #8b8b8b;
+  background-color: #adbdd4;
   padding: 1rem;
   padding-top: 2rem;
   margin-bottom: 4rem;
@@ -93,11 +93,18 @@ export default {
 }
 .form-wrapper form button {
   padding: 15px;
-  background-color: #464646;
+  background-color: #1e3799;
   color: #fff;
   font-family: "Montserrat Regular";
   font-size: 1rem;
   cursor: pointer;
+  transition: 0.1s ease-in-out;
+}
+.form-wrapper form button:hover {
+  background-color: #4a69bd;
+}
+.form-wrapper form button:active {
+  background-color: #3c6382;
 }
 .form-wrapper form label input {
   width: 100%;
@@ -138,6 +145,10 @@ form {
   width: 60px;
   background: url("../assets/logo.svg");
   background-size: contain;
+}
+.logo-title,
+.form-title {
+  color: #0c2461;
 }
 .logo-title {
   margin: 0;

@@ -64,8 +64,8 @@ export default {
         (res) => {
           res.data.forEach((el) => {
             this.personal.push(el);
-            this.loading = false;
           });
+          this.loading = false;
         },
         (err) => {
           console.log("Main. Error: ", err);

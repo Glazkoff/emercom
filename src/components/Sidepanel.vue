@@ -2,7 +2,7 @@
   <div id="side-panel">
     <div class="logo">
       <div class="logo-img"></div>
-      <router-link tag="h1" class="logo-title" to="main"
+      <router-link tag="h1" class="logo-title" to="/"
         >Система заявок<br />в IT-отдел</router-link
       >
     </div>
@@ -113,15 +113,10 @@ export default {
 </script>
 
 <style>
-#side-panel {
-  background-color: #8b8b8b;
-  height: 100vh;
-}
 #side-panel .logo {
   margin-left: 0.8rem;
   margin-top: 0.8rem;
   height: 60px;
-  /* margin-bottom: 60px; */
 }
 #side-panel .logo-img {
   width: 40px;
@@ -130,9 +125,10 @@ export default {
 #side-panel .logo-title {
   font-size: 1.1rem;
   cursor: pointer;
+  color: #fff;
 }
 .nav-wrapper {
-  height: calc(100vh - 1.6rem - 60px - 9rem);
+  height: calc(100vh - 1.6rem - 60px - 7.5rem);
   overflow-y: auto;
   padding-top: 60px;
   direction: rtl;
@@ -154,6 +150,7 @@ export default {
   margin-left: 10px;
   position: relative;
   text-decoration: none;
+  outline: none;
 }
 .logout-btn {
   z-index: 1000;
@@ -163,14 +160,27 @@ export default {
   display: block;
   width: 100%;
   cursor: pointer;
-  border-top: 1px solid rgba(0, 0, 0, 0.3);
+  border-top: 1px solid #d2dae6;
+  color: #d2dae6;
   border-radius: 0;
   margin-left: 0;
-  /* margin-top: 2rem; */
   font-size: 0.9rem;
 }
 .nav-link.router-link-active {
   background-color: #fff;
+  outline: none;
+  box-shadow: inset 1px 0px 1px rgba(0, 0, 0, 0.3);
+}
+a.nav-link.router-link-active span {
+  color: #000;
+}
+#side-panel {
+  height: 100vh;
+}
+#side-panel,
+.nav-link.router-link-active::before,
+.nav-link.router-link-active::after {
+  background-color: #0c2461;
 }
 .nav-link.router-link-active::before,
 .nav-link.router-link-active::after {
@@ -183,22 +193,15 @@ export default {
   right: -0px;
   top: calc(-100%);
   z-index: 100;
-  background-color: #8b8b8b;
 }
 .nav-link.router-link-active::after {
   top: calc(100%);
 }
-a.nav-link {
-  color: #000;
-}
-a.nav-link:visited {
-  color: #000;
-}
-a.nav-link:hover {
-  color: #000;
-}
+a.nav-link,
+a.nav-link:visited,
+a.nav-link:hover,
 a.nav-link:active {
-  color: #000;
+  color: #e4e7ec;
 }
 .nav-link span {
   z-index: 200;
@@ -221,6 +224,7 @@ a.nav-link:active {
   height: 2ch;
   margin-right: 10px;
   margin: auto 10px;
+  filter: invert(100%);
 }
 .home {
   background: url("../assets/home.svg") no-repeat;
@@ -229,6 +233,9 @@ a.nav-link:active {
 .pen {
   background: url("../assets/pen.svg") no-repeat;
   background-size: contain;
+}
+.nav-link.router-link-active > span.nav-logo {
+  filter: grayscale(100%) brightness(-500%);
 }
 .time {
   background: url("../assets/time.svg") no-repeat;
