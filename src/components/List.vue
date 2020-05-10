@@ -54,14 +54,14 @@
     >
       <div class="outer">
         <div class="relative">
+          <h2>
+            Вы уверены, что хотите <br />
+            отменить заявку?
+          </h2>
           <button class="deleteBtn" @click="closeModal()">
             &times;
           </button>
           <div class="inner">
-            <h2>
-              Вы уверены, что хотите <br />
-              отменить заявку?
-            </h2>
             <p>
               Ваша заявка больше не будет доступна ни вам, ни специалистам
               IT-отдела
@@ -84,12 +84,12 @@
     >
       <div class="outer">
         <div class="relative">
+          <h2>Заявка №{{ morerequest.request_id }}</h2>
           <button class="deleteBtn" @click="closeModal()">
             &times;
           </button>
           <div class="inner">
             <div v-if="morerequest">
-              <h2>Заявка №{{ morerequest.request_id }}</h2>
               <RequestBox :request="morerequest" inmodal="true"> </RequestBox>
               <h4>Комментарий:</h4>
               <p>{{ morerequest.comment }}</p>

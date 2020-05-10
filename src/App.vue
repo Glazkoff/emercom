@@ -220,6 +220,9 @@ button:active.deleteBtn {
 .relative {
   /* position: relative; */
 }
+.relative h2 {
+  margin-top: 0;
+}
 .inner {
   width: 100%;
   height: 50vh;

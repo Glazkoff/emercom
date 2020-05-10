@@ -118,6 +118,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
+// Получение списка пользователей
 app.get("/api/users", (req, res) => {
   try {
     jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
@@ -132,8 +133,52 @@ app.get("/api/users", (req, res) => {
       } else {
         console.log("GET");
         try {
+          pool.query("SELECT * FROM `users`", (err, result) => {
+            if (err) {
+              console.log(err);
+              res.status(500).send("Ошибка на сервере");
+            } else {
+              console.log("Результат запроса к БД:");
+              console.log(result);
+              res.json(result);
+            }
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// Обновление данных пользователей
+app.put("/api/users/:id", (req, res) => {
+  console.log(req.body);
+  try {
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+      err,
+      decoded
+    ) {
+      if (err) {
+        return res.status(401).send({
+          auth: false,
+          message: "Ошибка аутентификации токена"
+        });
+      } else {
+        if (req.query.changepassword) {
+          let hashPass = bcrypt.hashSync(req.body.password, salt);
           pool.query(
-            "SELECT * FROM `users`",
+            "UPDATE `users` SET fio = ?, role = ?, department_id = ?, login = ?, password = ? WHERE user_id = ?",
+            [
+              req.body.fio,
+              req.body.role,
+              req.body.department_id,
+              req.body.login,
+              hashPass,
+              req.params.id
+            ],
             (err, result) => {
               if (err) {
                 console.log(err);
@@ -145,17 +190,73 @@ app.get("/api/users", (req, res) => {
               }
             }
           );
-        } catch (err) {
-          console.log(err);
+        } else {
+          pool.query(
+            "UPDATE `users` SET fio = ?, role = ?, department_id = ?, login = ? WHERE user_id = ?",
+            [
+              req.body.fio,
+              req.body.role,
+              req.body.department_id,
+              req.body.login,
+              req.params.id
+            ],
+            (err, result) => {
+              if (err) {
+                console.log(err);
+                res.status(500).send("Ошибка на сервере");
+              } else {
+                console.log("Результат запроса к БД:");
+                console.log(result);
+                res.json(result);
+              }
+            }
+          );
         }
       }
     });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
   }
 });
 
-// Получить исполнителей 
+// Удалить пользовтеля
+app.delete("/api/users/:id", (req, res) => {
+  console.log(req.body);
+  try {
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+      err,
+      decoded
+    ) {
+      if (err) {
+        return res.status(401).send({
+          auth: false,
+          message: "Ошибка аутентификации токена"
+        });
+      } else {
+        pool.query(
+          "DELETE FROM `users` WHERE user_id = ?",
+          [
+            req.params.id
+          ],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              res.status(500).send("Ошибка на сервере");
+            } else {
+              console.log("Результат запроса к БД:");
+              console.log(result);
+              res.json(result);
+            }
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// Получить список исполнителей
 app.get("/api/executors", (req, res) => {
   try {
     jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
@@ -194,7 +295,7 @@ app.get("/api/executors", (req, res) => {
 });
 // Обработка регистрации
 app.post("/api/register", (req, res) => {
-  console.log(req.body);
+  console.log('Регистрация:', req.body);
   if (req.body.login == undefined || req.body.password == undefined) {
     return res.status(500).send("Проблема при регистрации пользователя!");
   }
@@ -202,7 +303,7 @@ app.post("/api/register", (req, res) => {
   let password = bcrypt.hashSync(req.body.password, salt);
   pool.query(
     "INSERT INTO `users` (fio, role, department_id, login, password) VALUES (?, ?, ?, ?, ?)",
-    ["Глазков Никита Олегович", "admin", 0, login, password],
+    [req.body.fio, req.body.role, req.body.department_id, login, password],
     (err, result) => {
       if (err) {
         console.warn("ОШИБКА");

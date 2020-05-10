@@ -115,6 +115,7 @@
     >
       <div class="outer">
         <div class="relative">
+          <h2>Выберите исполнителя</h2>
           <button class="deleteBtn" @click="closeModal()">
             &times;
           </button>
@@ -123,7 +124,6 @@
               <Loading></Loading>
             </div>
             <div v-if="!executorsLoading">
-              <h2>Выберите исполнителя</h2>
               <div
                 class="executor-radio-point"
                 v-for="(executor, index) in executors"
@@ -268,6 +268,15 @@ export default {
           } else {
             this.requests_reviewed.push(el);
           }
+        });
+        this.requests_reviewed.sort((a, b) => {
+          if (a.status > b.status) {
+            return 1;
+          }
+          if (a.status < b.status) {
+            return -1;
+          }
+          return 0;
         });
       },
       (err) => {
