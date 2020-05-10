@@ -84,10 +84,18 @@
                       'completed-box': request.status === 'Завершено',
                     }"
                   >
-                    <option value="На рассмотрении">На рассмотрении</option>
-                    <option value="В работе">В работе</option>
-                    <option value="Отклонено">Отклонено</option>
-                    <option value="Завершено">Завершено</option>
+                    <option value="На рассмотрении" class="considiration-box"
+                      >На рассмотрении</option
+                    >
+                    <option class="inwork-box" value="В работе"
+                      >В работе</option
+                    >
+                    <option class="rejected-box" value="Отклонено"
+                      >Отклонено</option
+                    >
+                    <option class="completed-box" value="Завершено"
+                      >Завершено</option
+                    >
                   </select>
                 </div>
               </td>
@@ -221,10 +229,12 @@ export default {
               return el.request_id === this.requestid;
             });
             this.requests_considiration[reqIndex].status = "В работе";
+            this.requests_considiration[reqIndex].executor_id = this.executorid;
             this.requests_reviewed.push(this.requests_considiration[reqIndex]);
             this.requests_considiration.splice(reqIndex, 1);
             this.executorsLoading = false;
             this.choose_user = false;
+            this.sortReviewed();
           },
           (err) => {
             console.log("Main. Error: ", err);
@@ -253,10 +263,31 @@ export default {
             console.log("Main. Error: ", err);
           }
         );
+      this.sortReviewed();
     },
     dateformat(date) {
       moment.locale("ru");
       return moment(date).format("lll");
+    },
+    sortReviewed() {
+      this.requests_reviewed.sort((a, b) => {
+        if (a.timestamp > b.timestamp) {
+          return -1;
+        }
+        if (a.timestamp < b.timestamp) {
+          return 1;
+        }
+        return 0;
+      });
+      this.requests_reviewed.sort((a, b) => {
+        if (a.status > b.status) {
+          return 1;
+        }
+        if (a.status < b.status) {
+          return -1;
+        }
+        return 0;
+      });
     },
   },
   async mounted() {
@@ -269,15 +300,7 @@ export default {
             this.requests_reviewed.push(el);
           }
         });
-        this.requests_reviewed.sort((a, b) => {
-          if (a.status > b.status) {
-            return 1;
-          }
-          if (a.status < b.status) {
-            return -1;
-          }
-          return 0;
-        });
+        this.sortReviewed();
       },
       (err) => {
         console.log("Main. Error: ", err);

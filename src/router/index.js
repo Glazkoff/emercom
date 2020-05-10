@@ -10,8 +10,8 @@ import Write from "../components/Write.vue";
 import AttachedRequests from "../components/AttachedRequests.vue";
 import ToAttach from "../components/ToAttach.vue";
 import UserEdit from "../components/UserEdit.vue";
-import store from '../store/index'
-
+import store from "../store/index";
+import JWT from "jwt-client";
 
 Vue.use(VueRouter);
 
@@ -20,7 +20,7 @@ const ifNotAuthenticated = (to, from, next) => {
   if (!store.getters.isAuthenticated) {
     next();
   } else {
-    next('/');
+    next("/");
   }
 };
 
@@ -31,6 +31,38 @@ const ifAuthenticated = (to, from, next) => {
     // next('login');
   } else {
     next();
+  }
+};
+
+// Для перехода в компоненты администратора
+const ifAdmin = (to, from, next) => {
+  if (!store.getters.isAuthenticated) {
+    console.log(`Пользователь неавторизован. Закрыт роут "${to.path}"`);
+    next("login");
+  } else {
+    let token = store.state.token;
+    let data = JWT.read(token);
+    if (data.claim.role === "admin") {
+      next();
+    } else {
+      next("/");
+    }
+  }
+};
+
+// Для перехода в компоненты администратора или специалиста IT-отдела
+const ifAdminOrEmployee = (to, from, next) => {
+  if (!store.getters.isAuthenticated) {
+    console.log(`Пользователь неавторизован. Закрыт роут "${to.path}"`);
+    next("login");
+  } else {
+    let token = store.state.token;
+    let data = JWT.read(token);
+    if ((data.claim.role === "admin") || (data.claim.role === "employee")) {
+      next();
+    } else {
+      next("/");
+    }
   }
 };
 
@@ -68,25 +100,25 @@ const routes = [{
     path: "/newmessage",
     name: "NewMessage",
     component: NewMessage,
-    beforeEnter: ifAuthenticated
+    beforeEnter: ifAdminOrEmployee
   },
   {
-    path: '/attached',
+    path: "/attached",
     name: "Attached",
     component: AttachedRequests,
-    beforeEnter: ifAuthenticated
+    beforeEnter: ifAdminOrEmployee
   },
   {
-    path: '/toattach',
-    name: 'ToAttach',
+    path: "/toattach",
+    name: "ToAttach",
     component: ToAttach,
-    beforeEnter: ifAuthenticated
+    beforeEnter: ifAdminOrEmployee
   },
   {
-    path: '/useredit',
+    path: "/useredit",
     name: "UserEdit",
     component: UserEdit,
-    beforeEnter: ifAuthenticated
+    beforeEnter: ifAdmin
   },
   {
     path: "/about",

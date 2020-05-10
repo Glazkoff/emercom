@@ -247,6 +247,35 @@ export default {
 }
 .requests-wrap > div > h3 {
   position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #fff;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  display: block;
+}
+.requests-wrap > div > h3::before {
+  display: block;
+  height: 100%;
+  width: 0.5rem;
+  background-color: #fff;
+  content: "";
+  position: absolute;
+  left: -0.5rem;
+  top: 0;
+}
+.requests-wrap > div:last-child > h3::after {
+  display: block;
+  height: 100%;
+  width: 0.5rem;
+  background-color: #fff;
+  content: "";
+  position: absolute;
+  right: -0.5rem;
+  top: 0;
 }
 .considiration > .request-box,
 .considiration-box {

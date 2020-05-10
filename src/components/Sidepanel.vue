@@ -34,28 +34,28 @@
         >
         <div class="white-spacer"></div>
       </div>
-      <div class="link-wrapper">
+      <div class="link-wrapper" v-if="isEmployee || isAdmin">
         <router-link to="NewMessage" class="nav-link"
           ><span class="nav-logo chat"></span
           ><span>Добавить<br />оповещение</span></router-link
         >
         <div class="white-spacer"></div>
       </div>
-      <div class="link-wrapper">
+      <div class="link-wrapper" v-if="isEmployee || isAdmin">
         <router-link to="attached" class="nav-link"
           ><span class="nav-logo list"></span
           ><span>Прикреплённые заявки</span></router-link
         >
         <div class="white-spacer"></div>
       </div>
-      <div class="link-wrapper">
+      <div class="link-wrapper" v-if="isEmployee || isAdmin">
         <router-link to="toattach" class="nav-link"
           ><span class="nav-logo list"></span
           ><span>Прикрепить заявку</span></router-link
         >
         <div class="white-spacer"></div>
       </div>
-      <div class="link-wrapper">
+      <div class="link-wrapper" v-if="isAdmin">
         <router-link to="useredit" class="nav-link"
           ><span class="nav-logo list"></span
           ><span>Редактирование пользователей</span></router-link
@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import JWT from "jwt-client";
 export default {
   name: "Sidepanel",
   methods: {
@@ -77,6 +78,35 @@ export default {
       this.$store.dispatch("AUTH_LOGOUT").then(() => {
         this.$router.push("/login");
       });
+    },
+  },
+  computed: {
+    isAdmin() {
+      let token = this.$store.state.token;
+      if (token) {
+        let data = JWT.read(token);
+        return data.claim.role === "admin";
+      } else {
+        return false;
+      }
+    },
+    isEmployee() {
+      let token = this.$store.state.token;
+      if (token) {
+        let data = JWT.read(token);
+        return data.claim.role === "employee";
+      } else {
+        return false;
+      }
+    },
+    isResponsible() {
+      let token = this.$store.state.token;
+      if (token) {
+        let data = JWT.read(token);
+        return data.claim.role === "responsible";
+      } else {
+        return false;
+      }
     },
   },
 };

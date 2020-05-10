@@ -752,6 +752,7 @@ app.get("/api/devices", (req, res) => {
   }
 });
 app.post("/api/devices", (req, res) => {
+  console.log('Устройство: ', req.body);
   if (req.headers["authorization"]) {
     try {
       jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
@@ -767,8 +768,8 @@ app.post("/api/devices", (req, res) => {
           console.log(decoded);
           try {
             pool.query(
-              "INSERT INTO `devices` () VALUES ()",
-              [decoded.department_id],
+              "INSERT INTO `devices` (name, characteristics, types, department_id) VALUES (?,?,?,?)",
+              [req.body.name, req.body.characteristics, JSON.stringify(req.body.types), decoded.department_id],
               (err, result) => {
                 res.send(result);
               }

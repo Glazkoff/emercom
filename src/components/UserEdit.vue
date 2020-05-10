@@ -32,7 +32,7 @@
                 <td>
                   <div v-if="user.role === 'admin'">Администратор</div>
                   <div v-if="user.role === 'employee'">Сотрудник IT-отдела</div>
-                  <div v-if="user.role === 'resonsible'">
+                  <div v-if="user.role === 'responsible'">
                     Ответственный за ТО в отделе
                   </div>
                 </td>
@@ -112,12 +112,6 @@
               </div>
               <div class="input-form">
                 <label for="editUser.role">Уровень доступа</label>
-                <!-- <input
-                  type="text"
-                  id="editUser.role"
-                  placeholder="Роль"
-                  v-model="editUser.role"
-                /> -->
                 <select
                   name="editUser.role"
                   id="editUser.role"
@@ -156,7 +150,7 @@
               <div class="input-form">
                 <label for="editUser.password">Пароль</label>
                 <input
-                  type="text"
+                  type="password"
                   id="editUser.password"
                   placeholder="Напишите новый пароль"
                   v-model="editUser.password"
@@ -252,6 +246,7 @@ export default {
           this.userError = true;
         }
       );
+      this.getUsers();
     },
     addUser() {
       this.userLoading = false;
@@ -346,6 +341,7 @@ h3 + .input-form button {
   width: 100%;
 }
 .input-form input[type="text"],
+.input-form input[type="password"],
 .input-form textarea {
   width: 90%;
 }

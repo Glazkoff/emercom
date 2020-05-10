@@ -42,7 +42,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   position: fixed;
-  z-index: 1000;
+  z-index: 9999;
 }
 #admin-panel * {
   display: block;

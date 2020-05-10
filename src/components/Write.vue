@@ -9,7 +9,7 @@
           Заявка успешно отправлена. Вы можете отправить ещё одну или
           просмотреть весь список своих заявок
         </p>
-        <div class="btn-row">
+        <div class="input-form btn-row">
           <button @click="newRequest()">Отправить ещё одну</button>
           <router-link to="list" tag="button"
             >Просмотреть весь список</router-link
@@ -155,12 +155,12 @@
     >
       <div class="outer">
         <div class="relative">
+          <h2>Добавить устройство</h2>
           <button class="deleteBtn" @click="closeModal()">
             &times;
           </button>
           <div class="inner">
             <div>
-              <h2>Добавить устройство</h2>
               <div class="input-form">
                 <label for="new_device.name">Название</label>
                 <input
@@ -278,11 +278,12 @@ export default {
     },
     sendDevice() {
       this.new_device.department_id = this.department_id;
+      console.log("Новое устройтсво", this.new_device);
       axios.post("http://localhost:8080/api/devices", this.new_device).then(
         (res) => {
           console.log(res);
           if (res.status == 200) {
-            this.success = true;
+            // this.success = true;
           }
         },
         (err) => {
@@ -420,6 +421,7 @@ export default {
   font-family: "Montserrat Medium";
 }
 .input-form input[type="text"],
+.input-form input[type="password"],
 .input-form select,
 .input-form textarea {
   display: block;
@@ -434,6 +436,7 @@ export default {
   height: 5rem;
 }
 .input-form input[type="text"],
+.input-form input[type="password"],
 .input-form textarea,
 .devices-wrap,
 button {
@@ -604,6 +607,8 @@ button:active.deleteBtn {
 }
 .push .btn-row {
   display: flex;
+  margin-left: 0;
+  margin-bottom: 0;
 }
 .push .btn-row *:not(:last-child) {
   margin-right: 0.5rem;
