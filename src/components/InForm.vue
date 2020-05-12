@@ -48,12 +48,15 @@ export default {
     };
   },
   methods: {
+    // Попытка авторизации
     tryAuth() {
       const authData = {
         login: this.login,
         password: this.password,
       };
       try {
+        // Возращает promise
+        // Если успешно, перенаправляет на путь "/"
         this.$store.dispatch("AUTH_REQUEST", authData).then(
           () => {
             this.$router.push("/");

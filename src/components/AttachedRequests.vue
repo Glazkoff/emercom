@@ -7,31 +7,9 @@
       </div>
       <div class="attached-wrap" v-else>
         <h3>К вам прикреплены следующие заявки:</h3>
-        <!-- <div class="requests-list">
-          <table>
-            <tr>
-              <th>ID #</th>
-              <th>Дата и время</th>
-              <th>Статус</th>
-              <th>ID автора</th>
-              <th>ID отдела</th>
-              <th>Контент</th>
-              <th>Общий комментарий</th>
-            </tr>
-            <tr v-for="(request, index) in requests" :key="index">
-              <td>{{ request.request_id }}</td>
-              <td>{{ request.timestamp }}</td>
-              <td>{{ request.status }}</td>
-              <td>{{ request.user_id }}</td>
-              <td>{{ request.department_id }}</td>
-              <td>{{ request.content }}</td>
-              <td>{{ request.comment }}</td>
-            </tr>
-          </table>
-        </div> -->
         <div class="requests-list">
           <table>
-            <tr>
+            <tr v-if="requests.length !== 0">
               <th>ID #</th>
               <th>Дата и время</th>
               <th>Статус</th>
@@ -85,6 +63,8 @@
               <td>{{ request.comment }}</td>
             </tr>
           </table>
+
+          <p v-if="requests.length === 0">Пока нет прикреплённых заявок</p>
         </div>
       </div>
     </div>
@@ -109,16 +89,16 @@ export default {
     };
   },
   methods: {
+    // Форматирование данных даты при выводе на экран
     dateformat(date) {
       moment.locale("ru");
       return moment(date).format("lll");
     },
+    // Изменить статус заявки
     changeStatus(requestId, index) {
-      console.log(requestId, index);
       let request = this.requests.find((el) => {
         return el.request_id === requestId;
       });
-      console.log(request);
       axios
         .put(
           "http://localhost:8080/api/requests/" + requestId + "?status=true",
@@ -137,6 +117,7 @@ export default {
         );
     },
   },
+  // При рендере в браузере запрашивает прикреплённые к пользователю заявки
   async mounted() {
     this.loading = true;
     axios.get("http://localhost:8080/api/requests?attached=true").then(

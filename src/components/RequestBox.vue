@@ -48,26 +48,27 @@ export default {
     checkedType: () => {},
   },
   methods: {
+    // Форматирование даты и времени при выводе на экран
     dateformat(date) {
       moment.locale("ru");
       return moment(date).format("lll");
     },
+    // Фильтрация при выводе типов обслуживания. Отображается только тип с флагом checked
     filterTypes(arr) {
       return arr.filter((el) => {
         return el.checked;
       });
     },
+    // Отправка события delete в родительский компонент при нажатии на кнопку удаления
     delreq() {
       this.$emit("delete");
     },
+    // Отправка события more в родительский компонент при нажатии на кнопку "Подробнее"
     morereq() {
       this.$emit("more", this.request.status, this.request.request_id);
     },
   },
   props: ["request", "inmodal"],
-  mounted() {
-    // console.log(this.request.content[0].name);
-  },
 };
 </script>
 

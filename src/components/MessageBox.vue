@@ -15,6 +15,7 @@ export default {
   name: "MessageBox",
   props: ["message"],
   methods: {
+    // Форматирование вывода даты и времени на экран
     dateformat(date) {
       moment.locale("ru");
       return moment(date).format("lll");

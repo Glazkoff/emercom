@@ -9,7 +9,10 @@
         <h3>Список необработанных заявок:</h3>
         <div class="requests-list">
           <table>
-            <tr class="sticky-header">
+            <tr
+              class="sticky-header"
+              v-if="requests_considiration.length !== 0"
+            >
               <th>ID #</th>
               <th>Дата и время</th>
               <th>Статус</th>
@@ -49,11 +52,15 @@
               <td>{{ request.comment }}</td>
             </tr>
           </table>
+
+          <p v-if="requests_considiration.length === 0">
+            Пока нет необработанных заявок
+          </p>
         </div>
         <h3>Список просмотренных заявок:</h3>
         <div class="requests-list">
           <table>
-            <tr>
+            <tr v-if="requests_reviewed.length !== 0">
               <th>ID #</th>
               <th>Дата и время</th>
               <th>Статус</th>
@@ -115,6 +122,10 @@
               <td>{{ request.comment }}</td>
             </tr>
           </table>
+
+          <p v-if="requests_reviewed.length === 0">
+            Пока нет просмотренных заявок
+          </p>
         </div>
       </div>
     </div>
@@ -192,9 +203,12 @@ export default {
     };
   },
   methods: {
+    // Закрыть модальное окно
     closeModal() {
       this.choose_user = false;
     },
+    // Загрузка списка возможных исполнителей (сотрдуник IT-отдела или администратор)
+    // при открытии модального окна "Назначить исполнителя"
     chooseExecutor(requestid) {
       this.requestid = requestid;
       this.choose_user = true;
@@ -213,6 +227,7 @@ export default {
         }
       );
     },
+    // Закрепить выбранного исполнителя в записи о заявке в базе данных
     sendExecutor() {
       console.log(this.requestid);
       console.log(this.executorid);
@@ -245,6 +260,7 @@ export default {
           }
         );
     },
+    // Изменить статус в заявке и изменить запись в базе данных
     changeStatus(requestId, index) {
       console.log(requestId, index);
       let request = this.requests_reviewed.find((el) => {
@@ -269,10 +285,12 @@ export default {
         );
       this.sortReviewed();
     },
+    // Форматирование даты и времени при выводе на экран
     dateformat(date) {
       moment.locale("ru");
       return moment(date).format("lll");
     },
+    // Сортировка записей в массиве просмотренных по времени и статусу заявки
     sortReviewed() {
       this.requests_reviewed.sort((a, b) => {
         if (a.timestamp > b.timestamp) {
@@ -294,9 +312,10 @@ export default {
       });
     },
   },
+  // При рендере компонента в браузере запросить все заявки 
   async mounted() {
     this.loading = true;
-    axios.get("http://localhost:8080/api/requests").then(
+    axios.get("http://localhost:8080/api/requests?common=true").then(
       (res) => {
         res.data.forEach((el) => {
           if (el.status === "На рассмотрении") {

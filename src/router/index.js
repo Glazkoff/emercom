@@ -15,6 +15,8 @@ import JWT from "jwt-client";
 
 Vue.use(VueRouter);
 
+// ФУНКЦИИ ЗАЩИТЫ РОУТОВ
+
 // Для перехода в компонент Entrance
 const ifNotAuthenticated = (to, from, next) => {
   if (!store.getters.isAuthenticated) {

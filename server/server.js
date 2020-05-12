@@ -393,7 +393,7 @@ app.post("/api/requests", (req, res) => {
   console.log(req.body);
   try {
     pool.query(
-      "INSERT INTO `requests` ( `status`, `user_id`, `department_id`, `content`, `comment` ) VALUES (?, ?, ?, ?, ?)",
+      "INSERT INTO `requests` ( `status`, `user_id`, `department_id`, `content`, `comment`) VALUES (?, ?, ?, ?, ?)",
       [
         "На рассмотрении",
         req.body.user_id,

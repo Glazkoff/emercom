@@ -12,26 +12,33 @@ export default new Vuex.Store({
     role: ""
   },
   getters: {
+    // Логическое значение - авторизован или нет
     isAuthenticated: (state) => !!state.token,
+    // Статус авторизации
     authStatus: (state) => state.status,
   },
   mutations: {
+    // Изменение состояния на "Загрузка"
     AUTH_REQUEST: (state) => {
       state.status = "loading";
     },
+    // Изменение состояния на "Успех"
     AUTH_SUCCESS: (state, token) => {
       state.status = "success";
       state.token = token;
     },
+    // Изменение состояния на "Ошибка"
     AUTH_ERROR: (state) => {
       state.status = "error";
     },
+    // Выход из учётной записи
     AUTH_LOGOUT: (state) => {
       state.token = "";
       state.status = "";
     },
   },
   actions: {
+    // POST запрос к API
     POST(url, data) {
       try {
         axios({
@@ -61,6 +68,7 @@ export default new Vuex.Store({
         console.log(error);
       }
     },
+    // Запрос авторизации, возвращает promise
     AUTH_REQUEST(context, user) {
       let prom;
       try {
@@ -100,37 +108,18 @@ export default new Vuex.Store({
               context.commit("AUTH_ERROR");
               localStorage.removeItem("user-token"); // если запрос ошибочен, удаление токена в localstorage при возможности
               reject(error);
-              // reject(error);
             })
             .catch((error) => {
               console.log("ОШИБКА СЕРВЕРА");
               console.log(error);
-              //   if (error.response) {
-              //     console.log(error.response.data);
-              //     console.log(error.response.status);
-              //     console.log(error.response.headers);
-              //     console.log(error.response)
-              //     console.log(`Ошибка сервера ${error.response.status} при ответе`);
-              //   } else if (error.request) {
-              //     console.log(`Ошибка сервера ${error.request.status} при запросе`);
-              //     console.log(error.request);
-              //   } else {
-              //     console.log('Error', error.message);
-              //   }
-              //   console.log(error.config);
-              //   context.commit("AUTH_ERROR");
-              //   localStorage.removeItem("user-token"); // если запрос ошибочен, удаление токена в localstorage при возможности
-              //   reject(error);
-              // });
             })
         })
         return prom;
       } catch (e) {
-        //   Promise.reject(e)
         console.log(e);
-        //   throw new Error("o_O");
       }
     },
+    // Удаление всех данных при выходе из учётной записи
     AUTH_LOGOUT: (context) => {
       return new Promise((resolve) => {
         context.commit("AUTH_LOGOUT");

@@ -138,10 +138,12 @@ export default {
     Loading,
   },
   methods: {
+    // При нажатии на кнопку удаления заявки, добавить в модальное окно данные заявки
     delreq(index) {
       this.delete = true;
       this.modalrequest = this.inconsidiration[index];
     },
+    // При нажатии на кнопку "Подробнее", добавить в модальное окно данные заявки
     morereq(status, id) {
       console.log("MORE", status, id);
       switch (status) {
@@ -171,10 +173,12 @@ export default {
       console.log(this.morerequest);
       this.more = true;
     },
+    // Закрыть модальное окно
     closeModal() {
       this.delete = false;
       this.more = false;
     },
+    // Удалить заявку из базы данных
     async killRequest() {
       let index = this.inconsidiration.findIndex(
         (el) => el.request_id === this.modalrequest.request_id
@@ -190,6 +194,7 @@ export default {
       this.delete = false;
     },
   },
+  // При рендере компонента запрашивать список всех заявок, отправленных пользователем
   async mounted() {
     this.loading = true;
     try {
@@ -232,7 +237,6 @@ export default {
 <style>
 .main-panel {
   overflow-y: scroll;
-  /* max-height: calc(100vh - 30px); */
 }
 .requests-wrap {
   margin: 0 auto;
@@ -287,33 +291,10 @@ export default {
 }
 .inwork > .request-box,
 .inwork-box {
-  background-color: #c2ffc2;
+  background-color: #c2c2ff;
 }
 .completed > .request-box,
 .completed-box {
-  background-color: #c2c2ff;
+  background-color: #c2ffc2;
 }
-/* 
-::-webkit-scrollbar {
-  width: 12px;
-}
-::-webkit-scrollbar-thumb {
-  border-width: 1px 1px 1px 2px;
-  border-color: #777;
-  background-color: #aaa;
-  border-radius: 8px;
-  cursor: pointer;
-}
-::-webkit-scrollbar-thumb:hover {
-  border-width: 1px 1px 1px 2px;
-  border-color: #555;
-  background-color: #777;
-}
-::-webkit-scrollbar-track {
-  border-width: 0;
-}
-::-webkit-scrollbar-track:hover {
-  border-left: solid 1px #aaa;
-  background-color: #eee;
-} */
 </style>

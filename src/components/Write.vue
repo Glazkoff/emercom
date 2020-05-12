@@ -257,9 +257,11 @@ export default {
     };
   },
   methods: {
+    // Открыть модальное окно "Добавить устройство"
     addDevice() {
       this.modal = true;
     },
+    // Добавить поле типа в модальном окне 
     addType() {
       let newType = {
         type: this.new_device.types.length,
@@ -267,9 +269,11 @@ export default {
       };
       this.new_device.types.push(newType);
     },
+    // Закрыть модальное окно
     closeModal() {
       this.modal = false;
     },
+    // Удалить поле типа из модального окна
     deleteType(index) {
       this.new_device.types.splice(index, 1);
       let i = 0;
@@ -279,15 +283,13 @@ export default {
         return el;
       });
     },
+    // Добавить запись о новом устройстве в базу данных
     sendDevice() {
       this.new_device.department_id = this.department_id;
       console.log("Новое устройтсво", this.new_device);
       axios.post("http://localhost:8080/api/devices", this.new_device).then(
         (res) => {
           console.log(res);
-          if (res.status == 200) {
-            // this.success = true;
-          }
         },
         (err) => {
           console.log("Write. Error: ", err);
@@ -296,6 +298,7 @@ export default {
       this.modal = false;
       this.getDevices();
     },
+    // Добавить устройство в список заявки
     addToChecked(index) {
       console.log(this.department_devices[index]);
       this.checked_service[this.department_devices[index].device_id] = 0;
@@ -303,11 +306,13 @@ export default {
       this.checked_devices.push(this.department_devices[index]);
       this.department_devices.splice(index, 1);
     },
+    // Удалить устройство из списка заявки
     deleteFromChecked(index, deviceId) {
       this.checked_service[deviceId] = undefined;
       this.department_devices.push(this.checked_devices[index]);
       this.checked_devices.splice(index, 1);
     },
+    // Отправить заявку, добавить запись в базу данных
     sendRequest() {
       const req = {
         user_id: localStorage.getItem("user-id"),
@@ -343,6 +348,7 @@ export default {
       );
       console.log(JSON.stringify(req));
     },
+    // Обнуление данных при создании нового запроса 
     newRequest() {
       this.checked_service = [];
       this.success = false;
@@ -350,6 +356,7 @@ export default {
       this.checked_devices = [];
       this.common_comment = "";
     },
+    // Загрузка списка устройств, связанных с отделом пользователя
     getDevices() {
       this.department_devices = [];
       this.devicesLoading = true;
@@ -373,6 +380,8 @@ export default {
     Sidepanel,
     Loading,
   },
+  // При рендере компонента в браузере загрузить список устройств, связанных с отделом
+  // и получить данные из LocalStorage
   mounted() {
     this.fio = localStorage.getItem("fio");
     this.department_id = localStorage.getItem("department-id");
@@ -398,7 +407,6 @@ export default {
   margin: 0 auto;
   border-radius: 8px;
   width: 94%;
-  /* height: 40vh; */
   min-height: 80vh;
   border: 1px solid #000;
   display: grid;
@@ -581,28 +589,6 @@ button:active.deleteBtn {
 .data-description {
   font-size: 0.9rem;
 }
-/* ::-webkit-scrollbar {
-  width: 12px;
-}
-::-webkit-scrollbar-thumb {
-  border-width: 1px 1px 1px 2px;
-  border-color: #777;
-  background-color: #aaa;
-  border-radius: 8px;
-  cursor: pointer;
-}
-::-webkit-scrollbar-thumb:hover {
-  border-width: 1px 1px 1px 2px;
-  border-color: #555;
-  background-color: #777;
-}
-::-webkit-scrollbar-track {
-  border-width: 0;
-}
-::-webkit-scrollbar-track:hover {
-  border-left: solid 1px #aaa;
-  background-color: #eee;
-} */
 .push {
   border: 1px solid rgba(0, 0, 0, 0.9);
   margin: 0 auto;

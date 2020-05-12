@@ -25,6 +25,7 @@ export default {
       common: [],
     };
   },
+  // При рендере компонента в браузере запрашивает сообщения с меткой "common"
   async mounted() {
     try {
       axios.get("http://localhost:8080/api/messages?common=true").then(
@@ -48,10 +49,7 @@ export default {
 .alerts-wrapper {
   display: flex;
   flex-direction: column;
-  /* margin: 0 auto; */
   width: 100%;
-  /* margin-right: 1.2rem; */
-  /* padding: 1rem; */
   box-sizing: border-box;
 }
 .alerts-title {

@@ -209,9 +209,11 @@ export default {
     };
   },
   methods: {
+    // Закрыть модальное окно
     closeModal() {
       this.user_modal = false;
     },
+    // Открыть модальное окно и вывести данные о пользователе в форму
     toEditUser(index) {
       this.userError = false;
       this.userSuccess = false;
@@ -225,6 +227,7 @@ export default {
       this.editUser.password = "";
       console.log(index);
     },
+    // Изменить запись в базе данных о пользователе
     sendEditUser() {
       this.userLoading = true;
       let urlPath = "http://localhost:8080/api/users/" + this.editUser.user_id;
@@ -252,6 +255,7 @@ export default {
       );
       this.getUsers();
     },
+    // Открыть модальное окно "Добавить пользователя"
     addUser() {
       this.userLoading = false;
       this.userSuccess = false;
@@ -267,6 +271,7 @@ export default {
         password: "",
       };
     },
+    // Удалить пользователя
     deleteUser() {
       this.userLoading = true;
       let urlPath = "http://localhost:8080/api/users/" + this.editUser.user_id;
@@ -284,6 +289,7 @@ export default {
         }
       );
     },
+    // Добавить запись о новом пользователе в базе данных
     sendNewUser() {
       let sendUser = {
         fio: this.editUser.fio,
@@ -306,6 +312,7 @@ export default {
         }
       );
     },
+    // Загрузить список пользователей
     getUsers() {
       this.loading = true;
       this.users = [];
@@ -323,6 +330,7 @@ export default {
       );
     },
   },
+  // При рендере компонента в браузере загрузить список пользователей
   async mounted() {
     let block = document.querySelector(".nav-wrapper");
     block.scrollTop = block.scrollHeight;

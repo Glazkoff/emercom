@@ -74,13 +74,16 @@ import JWT from "jwt-client";
 export default {
   name: "Sidepanel",
   methods: {
+    // Метод выхода из учётной записи
     logout() {
+      // Возвращает promise
       this.$store.dispatch("AUTH_LOGOUT").then(() => {
         this.$router.push("/login");
       });
     },
   },
   computed: {
+    // Вычисленное логическое свойство - администратор или нет
     isAdmin() {
       let token = this.$store.state.token;
       if (token) {
@@ -90,6 +93,7 @@ export default {
         return false;
       }
     },
+    // Вычисленное логическое свойство - сотрудник IT-отдела или нет
     isEmployee() {
       let token = this.$store.state.token;
       if (token) {
@@ -99,6 +103,7 @@ export default {
         return false;
       }
     },
+    // Вычисленное логическое свойство - ответственный за ТО или нет
     isResponsible() {
       let token = this.$store.state.token;
       if (token) {

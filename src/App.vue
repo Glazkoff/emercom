@@ -5,13 +5,13 @@
   </div>
 </template>
 <script>
-// import axios from "axios";
 import AdminPanel from "@/components/AdminPanel.vue";
 export default {
   components: {
     AdminPanel,
   },
   methods: {},
+  // При создании прииложения задаются системныее переменные и проверяется авторизация
   created() {
     const token = localStorage.getItem("user-token");
     if (token) {
@@ -20,7 +20,7 @@ export default {
     this.$http.interceptors.response.use(undefined, function(err) {
       return new Promise(function() {
         if (err.response) {
-          // alert(err.response.data);
+          console.log(err.response);
         }
         if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
           // Если ошибка авторизации на сервере, выкинуть пользователя

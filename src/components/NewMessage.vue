@@ -67,14 +67,14 @@
                   v-model="broadcast"
                 /><label for="common">Общая</label>
               </div>
-              <div class="radio-point" @click="loadUsers()">
+              <div class="radio-point">
                 <input
                   type="radio"
                   value="personal"
                   name="broadcast"
                   id="personal"
                   v-model="broadcast"
-                /><label for="personal">Личная</label>
+                /><label for="personal" @click="loadUsers()">Личная</label>
               </div>
             </div>
           </div>
@@ -86,12 +86,6 @@
             v-if="broadcast !== 'common' && !usersLoading"
           >
             <label for="destination_id">ID адресата</label>
-            <!-- <input
-              type="text"
-              id="destination_id"
-              placeholder="Введите заголовок"
-              v-model="destination_id"
-            /> -->
             <select name="" id="" v-model="destination_id">
               <option
                 :value="user.user_id"
@@ -102,7 +96,6 @@
             </select>
           </div>
           <div class="input-form">
-            <!-- <label for="type">Тип сообщения</label> -->
             <button
               @click="sendMessage()"
               :disabled="!header || (broadcast !== 'common' && !destination_id)"
@@ -142,11 +135,13 @@ export default {
     };
   },
   methods: {
+    // Метод загрузки списка пользователей
     loadUsers() {
       this.usersLoading = true;
-      this.users = [];
       axios.get("http://localhost:8080/api/users").then(
         (res) => {
+          this.users = [];
+          console.log("USERS", res);
           res.data.forEach((el) => {
             this.users.push(el);
           });
@@ -161,6 +156,7 @@ export default {
         }
       );
     },
+    // Метод отправки сообщений
     sendMessage() {
       this.loading = true;
       let message = {
@@ -186,6 +182,7 @@ export default {
         }
       );
     },
+    // При отправке ещё одного сообщения обнулить данные
     newMessage() {
       this.header = "";
       this.body = "";

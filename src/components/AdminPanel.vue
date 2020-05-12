@@ -26,6 +26,7 @@ export default {
     };
   },
   methods: {
+    // Скрыть административную панель
     hideAdminPanel() {
       this.isAdmin = !this.isAdmin;
     },

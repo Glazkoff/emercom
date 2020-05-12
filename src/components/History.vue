@@ -47,6 +47,7 @@ export default {
       loading: false,
     };
   },
+  // при рендере компонента загрузка списка оповещений, связанных с пользователем
   async mounted() {
     try {
       this.loading = true;
