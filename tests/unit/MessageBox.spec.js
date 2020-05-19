@@ -1,9 +1,7 @@
 import {
-  mount,
-  createLocalVue
+  mount
 } from "@vue/test-utils";
 import MessageBox from "@/components/MessageBox.vue";
-const localVue = createLocalVue();
 const testMessage = {
   type: 'important',
   timestamp: 12312313,

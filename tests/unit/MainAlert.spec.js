@@ -23,20 +23,6 @@ let errorMessage = new Error('Test error');
 let toRejectPromise = () => {
   axios.get.mockImplementationOnce(() => Promise.reject(errorMessage));
 }
-// jest.mock("axios", () => ({
-//   get: jest.fn(() => Promise.resolve({
-//     data: [{
-//       message_id: 5,
-//       timestamp: "2020-05-02T11:47:08.000Z",
-//       title: "asd",
-//       body: "asdd",
-//       from_user_id: 13,
-//       destination_id: 0,
-//       type: "usual",
-//       broadcast: "common",
-//     }]
-//   }))
-// }));
 describe("MainAlert.vue", () => {
   it("Все свойства компонента заданы корректно", async () => {
     toResolvePromise();
