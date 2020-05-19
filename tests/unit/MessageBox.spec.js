@@ -41,7 +41,7 @@ describe('MessageBox.vue', () => {
     });
     expect(wrapper.find("h3").text()).toBe("Тестовый заголовок");
   });
-  it("Корректная обработка входных данных", () => {
+  it("Корректная обработка входной даты", () => {
     const wrapper = mount(MessageBox, {
       propsData: {
         message: testMessage
