@@ -95,7 +95,7 @@ export default {
       return moment(date).format("lll");
     },
     // Изменить статус заявки
-    changeStatus(requestId, index) {
+    changeStatus(requestId) {
       let request = this.requests.find((el) => {
         return el.request_id === requestId;
       });

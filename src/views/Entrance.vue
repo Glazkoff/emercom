@@ -19,8 +19,8 @@ export default {
   name: "Entrance",
   components: {
     InForm,
-    MainAlert,
-  },
+    MainAlert
+  }
 };
 </script>
 

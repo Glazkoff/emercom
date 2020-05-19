@@ -60,7 +60,7 @@ const ifAdminOrEmployee = (to, from, next) => {
   } else {
     let token = store.state.token;
     let data = JWT.read(token);
-    if ((data.claim.role === "admin") || (data.claim.role === "employee")) {
+    if (data.claim.role === "admin" || data.claim.role === "employee") {
       next();
     } else {
       next("/");
@@ -68,7 +68,8 @@ const ifAdminOrEmployee = (to, from, next) => {
   }
 };
 
-const routes = [{
+const routes = [
+  {
     path: "/login",
     name: "Entrance",
     component: Entrance,
@@ -126,7 +127,7 @@ const routes = [{
     path: "/about",
     name: "About",
     component: () =>
-      import( /* webpackChunkName: "about" */ "../views/About.vue")
+      import(/* webpackChunkName: "about" */ "../views/About.vue")
   }
 ];
 

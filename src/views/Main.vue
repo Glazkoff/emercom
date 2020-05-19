@@ -38,7 +38,7 @@
                 'considiration-box': request.status === 'На рассмотрении',
                 'inwork-box': request.status === 'В работе',
                 'rejected-box': request.status === 'Отклонено',
-                'completed-box': request.status === 'Завершено',
+                'completed-box': request.status === 'Завершено'
               }"
             >
               <!-- <div class="btn-wrap">
@@ -76,7 +76,7 @@
                 'considiration-box': request.status === 'На рассмотрении',
                 'inwork-box': request.status === 'В работе',
                 'rejected-box': request.status === 'Отклонено',
-                'completed-box': request.status === 'Завершено',
+                'completed-box': request.status === 'Завершено'
               }"
             >
               <h4>{{ dateformat(request.timestamp) }}</h4>
@@ -113,7 +113,7 @@ export default {
   components: {
     Sidepanel,
     MessageBox,
-    Loading,
+    Loading
   },
   data() {
     return {
@@ -121,7 +121,7 @@ export default {
       activeReq: [],
       archieveReq: [],
       messagesLoading: false,
-      requestsLoading: false,
+      requestsLoading: false
     };
   },
   beforeMount() {
@@ -137,21 +137,21 @@ export default {
     this.messagesLoading = true;
     this.requestsLoading = true;
     axios.get("http://localhost:8080/api/messages").then(
-      (res) => {
-        res.data.forEach((el) => {
+      res => {
+        res.data.forEach(el => {
           this.messages.push(el);
         });
 
         this.messagesLoading = false;
       },
-      (err) => {
+      err => {
         console.log("Main. Error: ", err);
         this.messagesLoading = false;
       }
     );
     axios.get("http://localhost:8080/api/requests").then(
-      (res) => {
-        res.data.forEach((el) => {
+      res => {
+        res.data.forEach(el => {
           if (el.status === "Завершено") {
             this.archieveReq.push(el);
           } else {
@@ -161,7 +161,7 @@ export default {
         this.sortRequests();
         this.requestsLoading = false;
       },
-      (err) => {
+      err => {
         console.log("Main. Error: ", err);
         this.requestsLoading = false;
       }
@@ -191,8 +191,8 @@ export default {
         }
         return 0;
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

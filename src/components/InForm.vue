@@ -31,7 +31,9 @@
             required
           />
         </label>
-        <button class="rounded-corners" @click="tryAuth()">Войти</button>
+        <button id="auth-btn" class="rounded-corners" @click="tryAuth()">
+          Войти
+        </button>
       </form>
       <a>Не помню пароль</a>
     </div>
@@ -45,6 +47,7 @@ export default {
     return {
       login: "",
       password: "",
+      errorMessage: "",
     };
   },
   methods: {
@@ -62,11 +65,11 @@ export default {
             this.$router.push("/");
           },
           (err) => {
-            console.log("InFrom. Error: ", err);
+            this.errorMessage = err;
           }
         );
       } catch (error) {
-        console.log(error);
+        this.errorMessage = error;
       }
     },
   },

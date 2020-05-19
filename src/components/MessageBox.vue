@@ -19,8 +19,8 @@ export default {
     dateformat(date) {
       moment.locale("ru");
       return moment(date).format("lll");
-    },
-  },
+    }
+  }
 };
 </script>
 

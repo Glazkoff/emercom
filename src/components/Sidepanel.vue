@@ -80,7 +80,7 @@ export default {
       this.$store.dispatch("AUTH_LOGOUT").then(() => {
         this.$router.push("/login");
       });
-    },
+    }
   },
   computed: {
     // Вычисленное логическое свойство - администратор или нет
@@ -112,8 +112,8 @@ export default {
       } else {
         return false;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

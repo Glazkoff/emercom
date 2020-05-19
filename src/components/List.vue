@@ -129,13 +129,13 @@ export default {
       more: false,
       modalrequest: false,
       morerequest: false,
-      loading: false,
+      loading: false
     };
   },
   components: {
     Sidepanel,
     RequestBox,
-    Loading,
+    Loading
   },
   methods: {
     // При нажатии на кнопку удаления заявки, добавить в модальное окно данные заявки
@@ -148,22 +148,22 @@ export default {
       console.log("MORE", status, id);
       switch (status) {
         case "На рассмотрении":
-          this.morerequest = this.inconsidiration.find((el) => {
+          this.morerequest = this.inconsidiration.find(el => {
             return el.request_id === id;
           });
           break;
         case "Отклонено":
-          this.morerequest = this.rejected.find((el) => {
+          this.morerequest = this.rejected.find(el => {
             return el.request_id === id;
           });
           break;
         case "В работе":
-          this.morerequest = this.inwork.find((el) => {
+          this.morerequest = this.inwork.find(el => {
             return el.request_id === id;
           });
           break;
         case "Завершено":
-          this.morerequest = this.completed.find((el) => {
+          this.morerequest = this.completed.find(el => {
             return el.request_id === id;
           });
           break;
@@ -181,7 +181,7 @@ export default {
     // Удалить заявку из базы данных
     async killRequest() {
       let index = this.inconsidiration.findIndex(
-        (el) => el.request_id === this.modalrequest.request_id
+        el => el.request_id === this.modalrequest.request_id
       );
       try {
         await axios.delete(
@@ -192,15 +192,15 @@ export default {
       }
       this.inconsidiration.splice(index, 1);
       this.delete = false;
-    },
+    }
   },
   // При рендере компонента запрашивать список всех заявок, отправленных пользователем
   async mounted() {
     this.loading = true;
     try {
       axios.get("http://localhost:8080/api/requests").then(
-        (res) => {
-          res.data.forEach((el) => {
+        res => {
+          res.data.forEach(el => {
             console.log(el.content[0]);
             switch (el.status) {
               case "На рассмотрении":
@@ -222,7 +222,7 @@ export default {
           });
           this.loading = false;
         },
-        (err) => {
+        err => {
           console.log("Main. Error: ", err);
           this.loading = false;
         }
@@ -230,7 +230,7 @@ export default {
     } catch (err) {
       console.log(err);
     }
-  },
+  }
 };
 </script>
 

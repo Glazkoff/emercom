@@ -8,7 +8,7 @@
 import AdminPanel from "@/components/AdminPanel.vue";
 export default {
   components: {
-    AdminPanel,
+    AdminPanel
   },
   methods: {},
   // При создании прииложения задаются системныее переменные и проверяется авторизация
@@ -33,7 +33,7 @@ export default {
     if (!token && this.$route.path !== "/login") {
       this.$router.push("/login");
     }
-  },
+  }
 };
 </script>
 <style>

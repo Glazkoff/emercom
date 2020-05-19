@@ -118,7 +118,7 @@ export default {
   name: "NewMessage",
   components: {
     Sidepanel,
-    Loading,
+    Loading
   },
   data() {
     return {
@@ -131,7 +131,7 @@ export default {
       error: false,
       loading: false,
       usersLoading: false,
-      users: [],
+      users: []
     };
   },
   methods: {
@@ -139,10 +139,10 @@ export default {
     loadUsers() {
       this.usersLoading = true;
       axios.get("http://localhost:8080/api/users").then(
-        (res) => {
+        res => {
           this.users = [];
           console.log("USERS", res);
-          res.data.forEach((el) => {
+          res.data.forEach(el => {
             this.users.push(el);
           });
           this.usersLoading = false;
@@ -150,7 +150,7 @@ export default {
             this.destination_id = res.data[0].user_id;
           }
         },
-        (err) => {
+        err => {
           console.log("Main. Error: ", err);
           this.usersLoading = false;
         }
@@ -164,18 +164,18 @@ export default {
         body: this.body,
         destination_id: this.destination_id,
         type: this.type,
-        broadcast: this.broadcast,
+        broadcast: this.broadcast
       };
       console.log(message);
       axios.post("http://localhost:8080/api/messages", message).then(
-        (res) => {
+        res => {
           console.log(res);
           this.loading = false;
           if (res.status == 200) {
             this.success = true;
           }
         },
-        (err) => {
+        err => {
           this.loading = false;
           this.error = true;
           console.log("Write. Error: ", err);
@@ -192,8 +192,8 @@ export default {
       this.success = false;
       this.error = false;
       this.loading = false;
-    },
-  },
+    }
+  }
 };
 </script>
 

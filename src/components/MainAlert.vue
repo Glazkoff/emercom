@@ -23,23 +23,31 @@ export default {
   data() {
     return {
       common: [],
+      errorMessage: "",
     };
   },
   // При рендере компонента в браузере запрашивает сообщения с меткой "common"
   async mounted() {
     try {
-      axios.get("http://localhost:8080/api/messages?common=true").then(
-        (res) => {
-          res.data.forEach((el) => {
-            this.common.push(el);
-          });
-        },
-        (err) => {
-          console.log("Main. Error: ", err);
-        }
-      );
+      axios
+        .get("http://localhost:8080/api/messages?common=true")
+        .then(
+          (res) => {
+            res.data.forEach((el) => {
+              this.common.push(el);
+            });
+          },
+          (err) => {
+            this.errorMessage = err;
+            console.log("Main. Error: ", err);
+          }
+        )
+        .catch((err) => {
+          this.errorMessage = err;
+        });
     } catch (err) {
       console.log(err);
+      this.errorMessage = err;
     }
   },
 };

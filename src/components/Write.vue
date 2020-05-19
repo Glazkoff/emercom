@@ -244,16 +244,16 @@ export default {
         types: [
           {
             type: 0,
-            description: "",
-          },
+            description: ""
+          }
         ],
-        department_id: -1,
+        department_id: -1
       },
       department_devices: [],
       checked_service: {},
       checked_devices: [],
       common_comment: "",
-      devicesLoading: false,
+      devicesLoading: false
     };
   },
   methods: {
@@ -261,11 +261,11 @@ export default {
     addDevice() {
       this.modal = true;
     },
-    // Добавить поле типа в модальном окне 
+    // Добавить поле типа в модальном окне
     addType() {
       let newType = {
         type: this.new_device.types.length,
-        description: "",
+        description: ""
       };
       this.new_device.types.push(newType);
     },
@@ -277,7 +277,7 @@ export default {
     deleteType(index) {
       this.new_device.types.splice(index, 1);
       let i = 0;
-      this.new_device.types.map((el) => {
+      this.new_device.types.map(el => {
         el.type = i;
         i++;
         return el;
@@ -288,10 +288,10 @@ export default {
       this.new_device.department_id = this.department_id;
       console.log("Новое устройтсво", this.new_device);
       axios.post("http://localhost:8080/api/devices", this.new_device).then(
-        (res) => {
+        res => {
           console.log(res);
         },
-        (err) => {
+        err => {
           console.log("Write. Error: ", err);
         }
       );
@@ -319,10 +319,10 @@ export default {
         fio: this.fio,
         department_id: this.department_id,
         checked_devices: this.checked_devices,
-        common_comment: this.common_comment,
+        common_comment: this.common_comment
       };
       for (let index = 0; index < this.checked_devices.length; index++) {
-        this.checked_devices[index].types.map((el) => {
+        this.checked_devices[index].types.map(el => {
           if (
             this.checked_service[this.checked_devices[index].device_id] ===
             el.type
@@ -336,19 +336,19 @@ export default {
         });
       }
       axios.post("http://localhost:8080/api/requests", req).then(
-        (res) => {
+        res => {
           console.log(res);
           if (res.status == 200) {
             this.success = true;
           }
         },
-        (err) => {
+        err => {
           console.log("Write. Error: ", err);
         }
       );
       console.log(JSON.stringify(req));
     },
-    // Обнуление данных при создании нового запроса 
+    // Обнуление данных при создании нового запроса
     newRequest() {
       this.checked_service = [];
       this.success = false;
@@ -361,24 +361,24 @@ export default {
       this.department_devices = [];
       this.devicesLoading = true;
       axios.get("http://localhost:8080/api/devices").then(
-        (res) => {
-          res.data.forEach((el) => {
+        res => {
+          res.data.forEach(el => {
             el.comment = "";
             this.department_devices.push(el);
             console.log(el);
           });
           this.devicesLoading = false;
         },
-        (err) => {
+        err => {
           console.log("Write. Error: ", err);
           this.devicesLoading = false;
         }
       );
-    },
+    }
   },
   components: {
     Sidepanel,
-    Loading,
+    Loading
   },
   // При рендере компонента в браузере загрузить список устройств, связанных с отделом
   // и получить данные из LocalStorage
@@ -386,7 +386,7 @@ export default {
     this.fio = localStorage.getItem("fio");
     this.department_id = localStorage.getItem("department-id");
     this.getDevices();
-  },
+  }
 };
 </script>
 

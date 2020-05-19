@@ -29,7 +29,7 @@
                 'considiration-box': request.status === 'На рассмотрении',
                 'inwork-box': request.status === 'В работе',
                 'rejected-box': request.status === 'Отклонено',
-                'completed-box': request.status === 'Завершено',
+                'completed-box': request.status === 'Завершено'
               }"
             >
               <td>{{ request.request_id }}</td>
@@ -77,7 +77,7 @@
                 'considiration-box': request.status === 'На рассмотрении',
                 'inwork-box': request.status === 'В работе',
                 'rejected-box': request.status === 'Отклонено',
-                'completed-box': request.status === 'Завершено',
+                'completed-box': request.status === 'Завершено'
               }"
             >
               <td>{{ request.request_id }}</td>
@@ -91,7 +91,7 @@
                       'considiration-box': request.status === 'На рассмотрении',
                       'inwork-box': request.status === 'В работе',
                       'rejected-box': request.status === 'Отклонено',
-                      'completed-box': request.status === 'Завершено',
+                      'completed-box': request.status === 'Завершено'
                     }"
                   >
                     <option value="На рассмотрении" class="considiration-box"
@@ -188,7 +188,7 @@ export default {
   name: "ToAttach",
   components: {
     Sidepanel,
-    Loading,
+    Loading
   },
   data() {
     return {
@@ -199,7 +199,7 @@ export default {
       executorsLoading: false,
       executorid: -1,
       requestid: -1,
-      loading: false,
+      loading: false
     };
   },
   methods: {
@@ -216,13 +216,13 @@ export default {
       this.executorsLoading = true;
       this.executors = [];
       axios.get("http://localhost:8080/api/executors").then(
-        (res) => {
-          res.data.forEach((el) => {
+        res => {
+          res.data.forEach(el => {
             this.executors.push(el);
           });
           this.executorsLoading = false;
         },
-        (err) => {
+        err => {
           console.log("Main. Error: ", err);
         }
       );
@@ -238,13 +238,13 @@ export default {
             this.requestid +
             "?executor=true",
           {
-            executor_id: this.executorid,
+            executor_id: this.executorid
           }
         )
         .then(
-          (res) => {
+          res => {
             console.log(res);
-            let reqIndex = this.requests_considiration.findIndex((el) => {
+            let reqIndex = this.requests_considiration.findIndex(el => {
               return el.request_id === this.requestid;
             });
             this.requests_considiration[reqIndex].status = "В работе";
@@ -255,7 +255,7 @@ export default {
             this.choose_user = false;
             this.sortReviewed();
           },
-          (err) => {
+          err => {
             console.log("Main. Error: ", err);
           }
         );
@@ -263,7 +263,7 @@ export default {
     // Изменить статус в заявке и изменить запись в базе данных
     changeStatus(requestId, index) {
       console.log(requestId, index);
-      let request = this.requests_reviewed.find((el) => {
+      let request = this.requests_reviewed.find(el => {
         return el.request_id === requestId;
       });
       console.log(request);
@@ -271,15 +271,15 @@ export default {
         .put(
           "http://localhost:8080/api/requests/" + requestId + "?status=true",
           {
-            status: request.status,
+            status: request.status
           }
         )
         .then(
-          (res) => {
+          res => {
             console.log(res);
             this.executorsLoading = false;
           },
-          (err) => {
+          err => {
             console.log("Main. Error: ", err);
           }
         );
@@ -310,14 +310,14 @@ export default {
         }
         return 0;
       });
-    },
+    }
   },
-  // При рендере компонента в браузере запросить все заявки 
+  // При рендере компонента в браузере запросить все заявки
   async mounted() {
     this.loading = true;
     axios.get("http://localhost:8080/api/requests?common=true").then(
-      (res) => {
-        res.data.forEach((el) => {
+      res => {
+        res.data.forEach(el => {
           if (el.status === "На рассмотрении") {
             this.requests_considiration.push(el);
           } else {
@@ -327,12 +327,12 @@ export default {
         this.sortReviewed();
         this.loading = false;
       },
-      (err) => {
+      err => {
         console.log("Main. Error: ", err);
         this.loading = false;
       }
     );
-  },
+  }
 };
 </script>
 

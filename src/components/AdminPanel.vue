@@ -22,15 +22,15 @@ export default {
   name: "AdminPanel",
   data() {
     return {
-      isAdmin: false,
+      isAdmin: false
     };
   },
   methods: {
     // Скрыть административную панель
     hideAdminPanel() {
       this.isAdmin = !this.isAdmin;
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>

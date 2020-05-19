@@ -45,7 +45,7 @@ export default {
     return {};
   },
   computed: {
-    checkedType: () => {},
+    checkedType: () => {}
   },
   methods: {
     // Форматирование даты и времени при выводе на экран
@@ -55,7 +55,7 @@ export default {
     },
     // Фильтрация при выводе типов обслуживания. Отображается только тип с флагом checked
     filterTypes(arr) {
-      return arr.filter((el) => {
+      return arr.filter(el => {
         return el.checked;
       });
     },
@@ -66,9 +66,9 @@ export default {
     // Отправка события more в родительский компонент при нажатии на кнопку "Подробнее"
     morereq() {
       this.$emit("more", this.request.status, this.request.request_id);
-    },
+    }
   },
-  props: ["request", "inmodal"],
+  props: ["request", "inmodal"]
 };
 </script>
 
