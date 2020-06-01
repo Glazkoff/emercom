@@ -952,6 +952,11 @@ app.get("/test", (req, res) => {
   }
 });
 
+app.get('*', function (req, res) {
+  // return res.sendFile('../index.html');
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
 // Запуск сервера на порту PORT
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
