@@ -11,7 +11,7 @@ const CONFIG = require("./secret.config");
 const morgan = require("morgan");
 
 const app = express();
-const expressWs = require("express-ws")(app);
+// const expressWs = require("express-ws")(app);
 
 // Парсинг json - application/json
 app.use(bodyParser.json());
@@ -105,13 +105,13 @@ let salt = bcrypt.genSaltSync(10);
 /********************************************* */
 
 // Обработка запросов протокола WebSockets
-app.ws("/ws", function (ws, req) {
-  ws.on("message", function (msg) {
-    console.log(ws);
-    console.log("WS:", msg);
-    ws.send(msg);
-  });
-});
+// app.ws("/ws", function (ws, req) {
+//   ws.on("message", function (msg) {
+//     console.log(ws);
+//     console.log("WS:", msg);
+//     ws.send(msg);
+//   });
+// });
 
 // Обработка прямого пути
 app.get("/", (req, res) => {
@@ -939,7 +939,7 @@ app.get("/test", (req, res) => {
 });
 
 // Запуск сервера на порту PORT
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
