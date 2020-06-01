@@ -38,37 +38,37 @@ export default {
   components: {
     Sidepanel,
     MessageBox,
-    Loading
+    Loading,
   },
   data() {
     return {
       common: [],
       personal: [],
-      loading: false
+      loading: false,
     };
   },
   // при рендере компонента загрузка списка оповещений, связанных с пользователем
   async mounted() {
     try {
       this.loading = true;
-      axios.get("http://localhost:8080/api/messages?common=true").then(
-        res => {
-          res.data.forEach(el => {
+      axios.get(process.env.VUE_APP_API_URL + "/messages?common=true").then(
+        (res) => {
+          res.data.forEach((el) => {
             this.common.push(el);
           });
         },
-        err => {
+        (err) => {
           console.log("Main. Error: ", err);
         }
       );
-      axios.get("http://localhost:8080/api/messages?personal=true").then(
-        res => {
-          res.data.forEach(el => {
+      axios.get(process.env.VUE_APP_API_URL + "/messages?personal=true").then(
+        (res) => {
+          res.data.forEach((el) => {
             this.personal.push(el);
           });
           this.loading = false;
         },
-        err => {
+        (err) => {
           console.log("Main. Error: ", err);
           this.loading = false;
         }
@@ -76,7 +76,7 @@ export default {
     } catch (error) {
       console.log(error);
     }
-  }
+  },
 };
 </script>
 

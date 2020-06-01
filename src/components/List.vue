@@ -185,7 +185,7 @@ export default {
       );
       try {
         await axios.delete(
-          "http://localhost:8080/api/requests/" + this.modalrequest.request_id
+          process.env.VUE_APP_API_URL+"/requests/" + this.modalrequest.request_id
         );
       } catch (error) {
         console.log(error);
@@ -198,7 +198,7 @@ export default {
   async mounted() {
     this.loading = true;
     try {
-      axios.get("http://localhost:8080/api/requests").then(
+      axios.get(process.env.VUE_APP_API_URL+"/requests").then(
         res => {
           res.data.forEach(el => {
             console.log(el.content[0]);

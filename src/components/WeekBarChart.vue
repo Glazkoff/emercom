@@ -7,7 +7,7 @@ export default {
   extends: Bar,
   // mixins: [reactiveProp],
   mounted() {
-    axios.get("http://localhost:8080/api/charts/week").then(
+    axios.get(process.env.VUE_APP_API_URL + "/charts/week").then(
       (res) => {
         res.data.forEach((element) => {
           switch (element.status) {

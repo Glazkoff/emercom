@@ -157,7 +157,7 @@ export default {
   mounted() {
     this.messagesLoading = true;
     this.requestsLoading = true;
-    axios.get("http://localhost:8080/api/messages").then(
+    axios.get(process.env.VUE_APP_API_URL + "/messages").then(
       (res) => {
         res.data.forEach((el) => {
           this.messages.push(el);
@@ -170,7 +170,7 @@ export default {
         this.messagesLoading = false;
       }
     );
-    axios.get("http://localhost:8080/api/requests").then(
+    axios.get(process.env.VUE_APP_API_URL + "/requests").then(
       (res) => {
         res.data.forEach((el) => {
           if (el.status === "Завершено") {

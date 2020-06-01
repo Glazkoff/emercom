@@ -215,7 +215,7 @@ export default {
       this.executorid = -1;
       this.executorsLoading = true;
       this.executors = [];
-      axios.get("http://localhost:8080/api/executors").then(
+      axios.get(process.env.VUE_APP_API_URL+"/executors").then(
         res => {
           res.data.forEach(el => {
             this.executors.push(el);
@@ -234,7 +234,7 @@ export default {
       this.executorsLoading = true;
       axios
         .put(
-          "http://localhost:8080/api/requests/" +
+          process.env.VUE_APP_API_URL+"/requests/" +
             this.requestid +
             "?executor=true",
           {
@@ -269,7 +269,7 @@ export default {
       console.log(request);
       axios
         .put(
-          "http://localhost:8080/api/requests/" + requestId + "?status=true",
+          process.env.VUE_APP_API_URL+"/requests/" + requestId + "?status=true",
           {
             status: request.status
           }
@@ -315,7 +315,7 @@ export default {
   // При рендере компонента в браузере запросить все заявки
   async mounted() {
     this.loading = true;
-    axios.get("http://localhost:8080/api/requests?common=true").then(
+    axios.get(process.env.VUE_APP_API_URL+"/requests?common=true").then(
       res => {
         res.data.forEach(el => {
           if (el.status === "На рассмотрении") {

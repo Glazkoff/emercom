@@ -42,7 +42,7 @@ export default new Vuex.Store({
     POST(url, data) {
       try {
         axios({
-          url: "http://localhost:8080/api/" + url,
+          url: process.env.VUE_APP_API_URL + url,
           data: data,
           method: "POST"
         }).then(
@@ -75,14 +75,14 @@ export default new Vuex.Store({
     AUTH_REQUEST(context, user) {
       let prom;
       try {
-        prom = new Promise(function(resolve, reject) {
+        prom = new Promise(function (resolve, reject) {
           // Promise используется для редиректа при входе в систему
           context.commit("AUTH_REQUEST");
           axios({
-            url: "http://localhost:8080/api/login",
-            data: user,
-            method: "POST"
-          })
+              url: process.env.VUE_APP_API_URL + "/login",
+              data: user,
+              method: "POST"
+            })
             .then(
               resp => {
                 console.log(resp.data);

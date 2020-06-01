@@ -30,7 +30,7 @@ export default {
   async mounted() {
     try {
       axios
-        .get("http://localhost:8080/api/messages?common=true")
+        .get(process.env.VUE_APP_API_URL + "/messages?common=true")
         .then(
           (res) => {
             res.data.forEach((el) => {

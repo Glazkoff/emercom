@@ -230,7 +230,7 @@ export default {
     // Изменить запись в базе данных о пользователе
     sendEditUser() {
       this.userLoading = true;
-      let urlPath = "http://localhost:8080/api/users/" + this.editUser.user_id;
+      let urlPath = process.env.VUE_APP_API_URL+"/users/" + this.editUser.user_id;
       let sendUser = {
         fio: this.editUser.fio,
         role: this.editUser.role,
@@ -274,7 +274,7 @@ export default {
     // Удалить пользователя
     deleteUser() {
       this.userLoading = true;
-      let urlPath = "http://localhost:8080/api/users/" + this.editUser.user_id;
+      let urlPath = process.env.VUE_APP_API_URL+"/users/" + this.editUser.user_id;
       axios.delete(urlPath).then(
         res => {
           console.log(res);
@@ -298,7 +298,7 @@ export default {
         password: this.editUser.password,
         department_id: this.editUser.department_id
       };
-      axios.post("http://localhost:8080/api/register", sendUser).then(
+      axios.post(process.env.VUE_APP_API_URL+"/register", sendUser).then(
         res => {
           console.log(res);
           this.userLoading = false;
@@ -316,7 +316,7 @@ export default {
     getUsers() {
       this.loading = true;
       this.users = [];
-      axios.get("http://localhost:8080/api/users").then(
+      axios.get(process.env.VUE_APP_API_URL+"/users").then(
         res => {
           res.data.forEach(el => {
             this.users.push(el);

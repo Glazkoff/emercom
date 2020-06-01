@@ -6,7 +6,7 @@ export default {
   name: "MonthPieChart",
   extends: Pie,
   mounted() {
-    axios.get("http://localhost:8080/api/charts/month").then(
+    axios.get(process.env.VUE_APP_API_URL + "/charts/month").then(
       (res) => {
         res.data.forEach((element) => {
           switch (element.status) {

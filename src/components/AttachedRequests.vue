@@ -101,7 +101,7 @@ export default {
       });
       axios
         .put(
-          "http://localhost:8080/api/requests/" + requestId + "?status=true",
+          process.env.VUE_APP_API_URL+"/requests/" + requestId + "?status=true",
           {
             status: request.status,
           }
@@ -120,7 +120,7 @@ export default {
   // При рендере в браузере запрашивает прикреплённые к пользователю заявки
   async mounted() {
     this.loading = true;
-    axios.get("http://localhost:8080/api/requests?attached=true").then(
+    axios.get(process.env.VUE_APP_API_URL+"/requests?attached=true").then(
       (res) => {
         res.data.forEach((el) => {
           this.requests.push(el);

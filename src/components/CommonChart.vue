@@ -30,7 +30,7 @@ export default {
   },
   mounted() {
     this.isLoading = true;
-    axios.get("http://localhost:8080/api/charts/common").then(
+    axios.get(process.env.VUE_APP_API_URL + "/charts/common").then(
       (res) => {
         this.commonChartData = res.data;
         this.sumData = 0;
