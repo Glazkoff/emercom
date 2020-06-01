@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
+    "chart.js": "^2.9.3",
     "core-js": "^3.6.4",
     "express-session": "^1.17.1",
     "express-ws": "^4.0.0",
@@ -24,6 +25,7 @@
     "passport": "^0.4.1",
     "serve-static": "^1.14.1",
     "vue": "^2.6.11",
+    "vue-chartjs": "^3.5.0",
     "vue-router": "^3.1.6",
     "vuex": "^3.1.3"
   },

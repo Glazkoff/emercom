@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1589872524887" clover="3.2.0">
-  <project timestamp="1589872524887" name="All files">
+<coverage generated="1590000102440" clover="3.2.0">
+  <project timestamp="1590000102440" name="All files">
     <metrics statements="22" coveredstatements="17" conditionals="0" coveredconditionals="0" methods="11" coveredmethods="9" elements="33" coveredelements="26" complexity="0" loc="22" ncloc="22" packages="1" files="3" classes="3"/>
     <file name="InForm.vue" path="C:\Users\glazk\OneDrive\Документы\HandmadeApps\emercom\src\components\InForm.vue">
       <metrics statements="7" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="3"/>

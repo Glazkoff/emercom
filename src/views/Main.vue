@@ -2,6 +2,20 @@
   <div class="main-screen">
     <Sidepanel></Sidepanel>
     <div class="main main-panel centered-wrapper main-panel-nonscroll">
+      <div class="col chart-col">
+        <h2>Заявки за неделю</h2>
+        <WeekBarChart class="chart-wrap"></WeekBarChart>
+      </div>
+      <div class="col chart-col">
+        <h2>Заявки за месяц</h2>
+        <MonthPieChart class="chart-wrap"></MonthPieChart>
+      </div>
+
+      <div class="col chart-col">
+        <h2>Общее количество</h2>
+        <CommonChart class="chart-wrap"></CommonChart>
+      </div>
+
       <div class="col">
         <h2>Оповещения</h2>
         <div class="info-block scroll-bar rounded-corners">
@@ -38,7 +52,7 @@
                 'considiration-box': request.status === 'На рассмотрении',
                 'inwork-box': request.status === 'В работе',
                 'rejected-box': request.status === 'Отклонено',
-                'completed-box': request.status === 'Завершено'
+                'completed-box': request.status === 'Завершено',
               }"
             >
               <!-- <div class="btn-wrap">
@@ -76,7 +90,7 @@
                 'considiration-box': request.status === 'На рассмотрении',
                 'inwork-box': request.status === 'В работе',
                 'rejected-box': request.status === 'Отклонено',
-                'completed-box': request.status === 'Завершено'
+                'completed-box': request.status === 'Завершено',
               }"
             >
               <h4>{{ dateformat(request.timestamp) }}</h4>
@@ -104,6 +118,10 @@
 import Sidepanel from "@/components/Sidepanel.vue";
 import MessageBox from "@/components/MessageBox.vue";
 import Loading from "@/components/Loading.vue";
+import WeekBarChart from "@/components/WeekBarChart.vue";
+import MonthPieChart from "@/components/MonthPieChart.vue";
+import CommonChart from "@/components/CommonChart.vue";
+
 import axios from "axios";
 import JWT from "jwt-client";
 import moment from "moment";
@@ -113,7 +131,10 @@ export default {
   components: {
     Sidepanel,
     MessageBox,
-    Loading
+    Loading,
+    WeekBarChart,
+    MonthPieChart,
+    CommonChart,
   },
   data() {
     return {
@@ -121,7 +142,7 @@ export default {
       activeReq: [],
       archieveReq: [],
       messagesLoading: false,
-      requestsLoading: false
+      requestsLoading: false,
     };
   },
   beforeMount() {
@@ -137,21 +158,21 @@ export default {
     this.messagesLoading = true;
     this.requestsLoading = true;
     axios.get("http://localhost:8080/api/messages").then(
-      res => {
-        res.data.forEach(el => {
+      (res) => {
+        res.data.forEach((el) => {
           this.messages.push(el);
         });
 
         this.messagesLoading = false;
       },
-      err => {
+      (err) => {
         console.log("Main. Error: ", err);
         this.messagesLoading = false;
       }
     );
     axios.get("http://localhost:8080/api/requests").then(
-      res => {
-        res.data.forEach(el => {
+      (res) => {
+        res.data.forEach((el) => {
           if (el.status === "Завершено") {
             this.archieveReq.push(el);
           } else {
@@ -161,7 +182,7 @@ export default {
         this.sortRequests();
         this.requestsLoading = false;
       },
-      err => {
+      (err) => {
         console.log("Main. Error: ", err);
         this.requestsLoading = false;
       }
@@ -191,12 +212,38 @@ export default {
         }
         return 0;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style>
+.chart-col {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+.chart-col > h2 {
+  display: block;
+  /* min-height: 10%; */
+  height: unset !important;
+  box-sizing: border-box;
+}
+.chart-wrap {
+  height: 90%;
+  width: 90%;
+  /* max-width: 100%; /*/
+  /* max-height: 90%; */
+}
+/* .chart-wrap > div {
+  height: 50%;
+}
+.chart-wrap > div > div {
+  height: 50%;
+}
+.chart-wrap > div > div > div {
+  height: 50%;
+} */
 .main-screen {
   display: grid;
   grid-template-rows: 1fr;
@@ -212,15 +259,16 @@ export default {
   display: grid;
   grid-gap: 20px;
   width: 94%;
-  grid-template-rows: 1fr;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: (50% 50%);
+  /* grid-auto-columns: minmax(1fr, 1fr) 1fr 1fr; */
+  grid-template-columns: calc(33% - 10px) calc(33% - 10px) calc(33% - 10px);
   height: 100vh;
   justify-content: space-between;
   max-width: 80vw;
 }
 .info-block {
   border: 1px solid #000;
-  height: calc(100vh - 70px);
+  height: calc(48vh - 70px);
   background-color: #f4f7fb;
   overflow-y: auto;
 }
@@ -248,7 +296,9 @@ export default {
   color: #fff;
 }
 .col {
-  height: 100vh;
+  height: 48vh;
+  max-width: 100%;
+  max-height: 100%;
   position: relative;
 }
 .col h2 {
@@ -342,7 +392,5 @@ export default {
 .btn-wrap {
   display: flex;
   justify-content: flex-end;
-}
-.more-btn {
 }
 </style>

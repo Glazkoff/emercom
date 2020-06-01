@@ -118,6 +118,124 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
+// Получение данных за текущую неделю
+app.get("/api/charts/week", (req, res) => {
+  try {
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+      err,
+      decoded
+    ) {
+      if (err) {
+        return res.status(401).send({
+          auth: false,
+          message: "Ошибка аутентификации токена"
+        });
+      } else {
+        try {
+          pool.query(
+            "SELECT status, COUNT(*) AS count FROM requests WHERE year(timestamp) = year(now()) AND week(timestamp, 1) = week(now(), 1) GROUP BY status",
+            (err, result) => {
+              if (err) {
+                console.log(err);
+                res.status(500).send("Ошибка на сервере");
+              } else {
+                console.log("Результат запроса к БД:");
+                console.log(result);
+                res.json(result);
+              }
+            }
+          );
+        } catch (err) {
+          console.log(err);
+          res.status(500).send("Ошибка на сервере");
+        }
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Ошибка на сервере");
+  }
+});
+
+
+// Получение данных за текущий месяц
+app.get("/api/charts/month", (req, res) => {
+  try {
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+      err,
+      decoded
+    ) {
+      if (err) {
+        return res.status(401).send({
+          auth: false,
+          message: "Ошибка аутентификации токена"
+        });
+      } else {
+        try {
+          pool.query(
+            "SELECT status, COUNT(*) AS count FROM requests WHERE date_format(timestamp, '%Y%m') = date_format(now(), '%Y%m') GROUP BY status ",
+            (err, result) => {
+              if (err) {
+                console.log(err);
+                res.status(500).send("Ошибка на сервере");
+              } else {
+                console.log("Результат запроса к БД:");
+                console.log(result);
+                res.json(result);
+              }
+            }
+          );
+        } catch (err) {
+          console.log(err);
+          res.status(500).send("Ошибка на сервере");
+        }
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Ошибка на сервере");
+  }
+});
+
+// Получение данных за всё время
+app.get("/api/charts/common", (req, res) => {
+  try {
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+      err,
+      decoded
+    ) {
+      if (err) {
+        return res.status(401).send({
+          auth: false,
+          message: "Ошибка аутентификации токена"
+        });
+      } else {
+        try {
+          pool.query(
+            "SELECT status, COUNT(*) AS count FROM `requests` GROUP BY status",
+            (err, result) => {
+              if (err) {
+                console.log(err);
+                res.status(500).send("Ошибка на сервере");
+              } else {
+                console.log("Результат запроса к БД:");
+                console.log(result);
+                res.json(result);
+              }
+            }
+          );
+        } catch (err) {
+          console.log(err);
+          res.status(500).send("Ошибка на сервере");
+        }
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Ошибка на сервере");
+  }
+});
+
 // Получение списка пользователей
 app.get("/api/users", (req, res) => {
   try {
@@ -150,6 +268,7 @@ app.get("/api/users", (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(500).send("Ошибка на сервере");
   }
 });
 
@@ -235,9 +354,7 @@ app.delete("/api/users/:id", (req, res) => {
       } else {
         pool.query(
           "DELETE FROM `users` WHERE user_id = ?",
-          [
-            req.params.id
-          ],
+          [req.params.id],
           (err, result) => {
             if (err) {
               console.log(err);
@@ -295,7 +412,7 @@ app.get("/api/executors", (req, res) => {
 });
 // Обработка регистрации
 app.post("/api/register", (req, res) => {
-  console.log('Регистрация:', req.body);
+  console.log("Регистрация:", req.body);
   if (req.body.login == undefined || req.body.password == undefined) {
     return res.status(500).send("Проблема при регистрации пользователя!");
   }
@@ -753,7 +870,7 @@ app.get("/api/devices", (req, res) => {
   }
 });
 app.post("/api/devices", (req, res) => {
-  console.log('Устройство: ', req.body);
+  console.log("Устройство: ", req.body);
   if (req.headers["authorization"]) {
     try {
       jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
@@ -770,7 +887,12 @@ app.post("/api/devices", (req, res) => {
           try {
             pool.query(
               "INSERT INTO `devices` (name, characteristics, types, department_id) VALUES (?,?,?,?)",
-              [req.body.name, req.body.characteristics, JSON.stringify(req.body.types), decoded.department_id],
+              [
+                req.body.name,
+                req.body.characteristics,
+                JSON.stringify(req.body.types),
+                decoded.department_id
+              ],
               (err, result) => {
                 res.send(result);
               }
