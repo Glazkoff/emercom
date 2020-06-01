@@ -9,6 +9,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const CONFIG = require("./secret.config");
 const morgan = require("morgan");
+require('dotenv').config();
+
 
 const app = express();
 // const expressWs = require("express-ws")(app);
@@ -52,14 +54,26 @@ app.use(function (req, res, next) {
 //   charset: "utf8_general_ci"
 // });
 
-const pool = mysql.createPool({
-  connectionLimit: 10,
-  host: dbConfig.HOST,
-  user: dbConfig.USER,
-  password: dbConfig.PASSWORD,
-  database: dbConfig.DB,
-  charset: "utf8_general_ci"
-});
+let pool;
+if (process.env.NODE_ENV === 'production') {
+  pool = mysql.createPool({
+    connectionLimit: 10,
+    host: dbConfig.PROD.HOST,
+    user: dbConfig.PROD.USER,
+    password: dbConfig.PROD.PASSWORD,
+    database: dbConfig.PROD.DB,
+    charset: "utf8_general_ci"
+  });
+} else {
+  pool = mysql.createPool({
+    connectionLimit: 10,
+    host: dbConfig.DEV.HOST,
+    user: dbConfig.DEV.USER,
+    password: dbConfig.DEV.PASSWORD,
+    database: dbConfig.DEV.DB,
+    charset: "utf8_general_ci"
+  });
+}
 
 pool.getConnection((err, connection) => {
   if (err) {
