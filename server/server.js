@@ -9,11 +9,13 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const CONFIG = require("./secret.config");
 const morgan = require("morgan");
-require('dotenv').config();
-
+const history = require("connect-history-api-fallback");
+require("dotenv").config();
 
 const app = express();
 // const expressWs = require("express-ws")(app);
+
+app.use(history());
 
 // Парсинг json - application/json
 app.use(bodyParser.json());
@@ -21,7 +23,7 @@ app.use(bodyParser.json());
 // Парсинг запросов по типу: application/x-www-form-urlencoded
 app.use(
   express.urlencoded({
-    extended: true
+    extended: true,
   })
 );
 
@@ -32,7 +34,7 @@ app.use(morgan("common"));
 app.use("/", serveStatic(path.join(__dirname, "../dist")));
 
 // настройка CORS
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
@@ -55,14 +57,14 @@ app.use(function (req, res, next) {
 // });
 
 let pool;
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   pool = mysql.createPool({
     connectionLimit: 10,
     host: dbConfig.PROD.HOST,
     user: dbConfig.PROD.USER,
     password: dbConfig.PROD.PASSWORD,
     database: dbConfig.PROD.DB,
-    charset: "utf8_general_ci"
+    charset: "utf8_general_ci",
   });
 } else {
   pool = mysql.createPool({
@@ -71,7 +73,7 @@ if (process.env.NODE_ENV === 'production') {
     user: dbConfig.DEV.USER,
     password: dbConfig.DEV.PASSWORD,
     database: dbConfig.DEV.DB,
-    charset: "utf8_general_ci"
+    charset: "utf8_general_ci",
   });
 }
 
@@ -135,14 +137,14 @@ app.get("/", (req, res) => {
 // Получение данных за текущую неделю
 app.get("/api/charts/week", (req, res) => {
   try {
-    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
       err,
       decoded
     ) {
       if (err) {
         return res.status(401).send({
           auth: false,
-          message: "Ошибка аутентификации токена"
+          message: "Ошибка аутентификации токена",
         });
       } else {
         try {
@@ -171,18 +173,17 @@ app.get("/api/charts/week", (req, res) => {
   }
 });
 
-
 // Получение данных за текущий месяц
 app.get("/api/charts/month", (req, res) => {
   try {
-    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
       err,
       decoded
     ) {
       if (err) {
         return res.status(401).send({
           auth: false,
-          message: "Ошибка аутентификации токена"
+          message: "Ошибка аутентификации токена",
         });
       } else {
         try {
@@ -214,14 +215,14 @@ app.get("/api/charts/month", (req, res) => {
 // Получение данных за всё время
 app.get("/api/charts/common", (req, res) => {
   try {
-    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
       err,
       decoded
     ) {
       if (err) {
         return res.status(401).send({
           auth: false,
-          message: "Ошибка аутентификации токена"
+          message: "Ошибка аутентификации токена",
         });
       } else {
         try {
@@ -253,14 +254,14 @@ app.get("/api/charts/common", (req, res) => {
 // Получение списка пользователей
 app.get("/api/users", (req, res) => {
   try {
-    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
       err,
       decoded
     ) {
       if (err) {
         return res.status(401).send({
           auth: false,
-          message: "Ошибка аутентификации токена"
+          message: "Ошибка аутентификации токена",
         });
       } else {
         console.log("GET");
@@ -290,14 +291,14 @@ app.get("/api/users", (req, res) => {
 app.put("/api/users/:id", (req, res) => {
   console.log(req.body);
   try {
-    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
       err,
       decoded
     ) {
       if (err) {
         return res.status(401).send({
           auth: false,
-          message: "Ошибка аутентификации токена"
+          message: "Ошибка аутентификации токена",
         });
       } else {
         if (req.query.changepassword) {
@@ -310,7 +311,7 @@ app.put("/api/users/:id", (req, res) => {
               req.body.department_id,
               req.body.login,
               hashPass,
-              req.params.id
+              req.params.id,
             ],
             (err, result) => {
               if (err) {
@@ -331,7 +332,7 @@ app.put("/api/users/:id", (req, res) => {
               req.body.role,
               req.body.department_id,
               req.body.login,
-              req.params.id
+              req.params.id,
             ],
             (err, result) => {
               if (err) {
@@ -356,14 +357,14 @@ app.put("/api/users/:id", (req, res) => {
 app.delete("/api/users/:id", (req, res) => {
   console.log(req.body);
   try {
-    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
       err,
       decoded
     ) {
       if (err) {
         return res.status(401).send({
           auth: false,
-          message: "Ошибка аутентификации токена"
+          message: "Ошибка аутентификации токена",
         });
       } else {
         pool.query(
@@ -390,14 +391,14 @@ app.delete("/api/users/:id", (req, res) => {
 // Получить список исполнителей
 app.get("/api/executors", (req, res) => {
   try {
-    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
       err,
       decoded
     ) {
       if (err) {
         return res.status(401).send({
           auth: false,
-          message: "Ошибка аутентификации токена"
+          message: "Ошибка аутентификации токена",
         });
       } else {
         console.log("GET");
@@ -452,17 +453,19 @@ app.post("/api/register", (req, res) => {
               return res.status(500).send("Проблема получении пользователя");
             } else {
               console.log(reslt);
-              let token = jwt.sign({
-                  id: reslt.insertId
+              let token = jwt.sign(
+                {
+                  id: reslt.insertId,
                 },
-                CONFIG.SECRET, {
-                  expiresIn: 86400 // токен на 24 часа
+                CONFIG.SECRET,
+                {
+                  expiresIn: 86400, // токен на 24 часа
                 }
               );
               res.status(200).send({
                 token,
                 fio: reslt[0].fio,
-                login: login
+                login: login,
               });
             }
           }
@@ -493,16 +496,18 @@ app.post("/api/login", (req, res) => {
           );
           if (!passwordIsValid) {
             return res.status(401).send({
-              token: null
+              token: null,
             });
           } else {
-            let token = jwt.sign({
+            let token = jwt.sign(
+              {
                 user_id: result[0].user_id,
                 department_id: result[0].department_id,
-                role: result[0].role
+                role: result[0].role,
               },
-              CONFIG.SECRET, {
-                expiresIn: 86400 // токен на 24 часа
+              CONFIG.SECRET,
+              {
+                expiresIn: 86400, // токен на 24 часа
               }
             );
             res.status(200).send({
@@ -510,7 +515,7 @@ app.post("/api/login", (req, res) => {
               fio: result[0].fio,
               login: req.body.login,
               department_id: result[0].department_id,
-              user_id: result[0].user_id
+              user_id: result[0].user_id,
             });
           }
         }
@@ -530,7 +535,7 @@ app.post("/api/requests", (req, res) => {
         req.body.user_id,
         req.body.department_id,
         JSON.stringify(req.body.checked_devices),
-        req.body.common_comment
+        req.body.common_comment,
       ],
       (err, result) => {
         if (err) {
@@ -550,14 +555,14 @@ app.post("/api/requests", (req, res) => {
 
 app.get("/api/requests", (req, res) => {
   try {
-    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
       err,
       decoded
     ) {
       if (err) {
         return res.status(401).send({
           auth: false,
-          message: "Ошибка аутентификации токена"
+          message: "Ошибка аутентификации токена",
         });
       } else {
         console.log("GET");
@@ -618,14 +623,14 @@ app.get("/api/requests", (req, res) => {
 
 app.put("/api/requests/:id", (req, res) => {
   try {
-    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
       err,
       decoded
     ) {
       if (err) {
         return res.status(401).send({
           auth: false,
-          message: "Ошибка аутентификации токена"
+          message: "Ошибка аутентификации токена",
         });
       } else {
         try {
@@ -671,14 +676,14 @@ app.put("/api/requests/:id", (req, res) => {
 });
 
 app.delete("/api/requests/:id", (req, res) => {
-  jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+  jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
     err,
     decoded
   ) {
     if (err) {
       return res.status(401).send({
         auth: false,
-        message: "Ошибка аутентификации токена"
+        message: "Ошибка аутентификации токена",
       });
     } else {
       console.log("GET");
@@ -709,14 +714,14 @@ app.post("/api/messages", (req, res) => {
   // if (connection) {
   console.log("MESSAGE", req.body);
   try {
-    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+    jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
       err,
       decoded
     ) {
       if (err) {
         return res.status(401).send({
           auth: false,
-          message: "Ошибка аутентификации токена"
+          message: "Ошибка аутентификации токена",
         });
       } else {
         try {
@@ -728,7 +733,7 @@ app.post("/api/messages", (req, res) => {
               decoded.user_id,
               +req.body.destination_id,
               req.body.type,
-              req.body.broadcast
+              req.body.broadcast,
             ],
             (err, result) => {
               if (err) {
@@ -768,14 +773,14 @@ app.get("/api/messages", (req, res) => {
     );
   } else if (req.headers["authorization"]) {
     try {
-      jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+      jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
         err,
         decoded
       ) {
         if (err) {
           return res.status(401).send({
             auth: false,
-            message: "Ошибка аутентификации токена"
+            message: "Ошибка аутентификации токена",
           });
         } else {
           console.log(decoded);
@@ -790,7 +795,7 @@ app.get("/api/messages", (req, res) => {
                 "SELECT * FROM `messages` WHERE broadcast = 'personal' AND destination_id = ? ORDER BY type, message_id DESC",
                 [
                   jwt.verify(req.headers["authorization"], CONFIG.SECRET)
-                  .user_id
+                    .user_id,
                 ],
                 (err, result) => {
                   if (err) {
@@ -830,7 +835,7 @@ app.get("/api/messages", (req, res) => {
   } else {
     res.status(401).send({
       auth: false,
-      message: "Нет токена!"
+      message: "Нет токена!",
     });
   }
   // if (connection) {
@@ -848,14 +853,14 @@ app.get("/api/messages", (req, res) => {
 app.get("/api/devices", (req, res) => {
   if (req.headers["authorization"]) {
     try {
-      jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+      jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
         err,
         decoded
       ) {
         if (err) {
           return res.status(401).send({
             auth: false,
-            message: "Ошибка аутентификации токена"
+            message: "Ошибка аутентификации токена",
           });
         } else {
           console.log(decoded);
@@ -879,7 +884,7 @@ app.get("/api/devices", (req, res) => {
   } else {
     return res.status(401).send({
       auth: false,
-      message: "Ошибка аутентификации токена"
+      message: "Ошибка аутентификации токена",
     });
   }
 });
@@ -887,14 +892,14 @@ app.post("/api/devices", (req, res) => {
   console.log("Устройство: ", req.body);
   if (req.headers["authorization"]) {
     try {
-      jwt.verify(req.headers["authorization"], CONFIG.SECRET, function (
+      jwt.verify(req.headers["authorization"], CONFIG.SECRET, function(
         err,
         decoded
       ) {
         if (err) {
           return res.status(401).send({
             auth: false,
-            message: "Ошибка аутентификации токена"
+            message: "Ошибка аутентификации токена",
           });
         } else {
           console.log(decoded);
@@ -905,7 +910,7 @@ app.post("/api/devices", (req, res) => {
                 req.body.name,
                 req.body.characteristics,
                 JSON.stringify(req.body.types),
-                decoded.department_id
+                decoded.department_id,
               ],
               (err, result) => {
                 res.send(result);
@@ -923,7 +928,7 @@ app.post("/api/devices", (req, res) => {
   } else {
     return res.status(401).send({
       auth: false,
-      message: "Ошибка аутентификации токена"
+      message: "Ошибка аутентификации токена",
     });
   }
 });
@@ -945,16 +950,11 @@ app.get("/test", (req, res) => {
     }
     console.log(decode);
     res.status(200).send({
-      id: decode.id
+      id: decode.id,
     });
   } else {
     res.status(401).send("Токен не найден!");
   }
-});
-
-app.get('*', function (req, res) {
-  // return res.sendFile('../index.html');
-  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 // Запуск сервера на порту PORT
