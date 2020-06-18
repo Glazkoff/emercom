@@ -13,8 +13,10 @@
             type="text"
             name="login"
             id="login"
-            v-model="login"
-            class="rounded-corners"
+            @input="errorMessage = ''"
+            v-model.trim="$v.login.$model"
+            class="rounded-corners "
+            :class="{ 'is-invalid': $v.login.$error || this.errorMessage }"
             placeholder="login"
             required
           />
@@ -25,13 +27,29 @@
             type="password"
             name="password"
             id="password"
-            v-model="password"
+            v-model.trim="$v.password.$model"
+            @input="errorMessage = ''"
             class="rounded-corners"
+            :class="{ 'is-invalid': $v.password.$error || this.errorMessage }"
             placeholder="********"
             required
           />
         </label>
-        <button id="auth-btn" class="rounded-corners" @click="tryAuth()">
+        <label class="invalid-messages" v-if="errorMessage"
+          >Неправильный логин или пароль!</label
+        >
+        <label class="invalid-messages" v-if="$v.login.$error"
+          >Логин обязателен!</label
+        >
+        <label class="invalid-messages" v-if="$v.password.$error"
+          >Пароль обязателен!</label
+        >
+        <button
+          id="auth-btn"
+          class="rounded-corners"
+          @click="tryAuth()"
+          :disabled="$v.login.$invalid || $v.password.$invalid"
+        >
           Войти
         </button>
       </form>
@@ -41,6 +59,7 @@
 </template>
 
 <script>
+import { required } from "vuelidate/lib/validators";
 export default {
   name: "InForm",
   data() {
@@ -49,6 +68,14 @@ export default {
       password: "",
       errorMessage: "",
     };
+  },
+  validations: {
+    login: {
+      required,
+    },
+    password: {
+      required,
+    },
   },
   methods: {
     // Попытка авторизации
@@ -149,7 +176,7 @@ form {
 .logo-img {
   height: 60px;
   width: 60px;
-  background: url("../assets/logo.svg");
+  background: url("../assets/logo.svg") no-repeat;
   background-size: contain;
 }
 .logo-title,
@@ -159,5 +186,14 @@ form {
 .logo-title {
   margin: 0;
   margin-left: 10px;
+}
+.is-invalid {
+  background-color: #f19d9d;
+}
+.invalid-messages {
+  color: #9c3b63;
+}
+#auth-btn[disabled] {
+  background-color: #7e9cdb;
 }
 </style>

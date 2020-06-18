@@ -3,6 +3,8 @@ import App from "./App.vue";
 import router from "./router/index";
 import store from "./store";
 import axios from "axios";
+import Vuelidate from 'vuelidate'
+Vue.use(Vuelidate)
 
 Vue.prototype.$http = axios;
 Vue.config.productionTip = false;

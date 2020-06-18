@@ -364,5 +364,12 @@ table {
   .find-input {
     box-sizing: border-box;
   }
+  .split-screen-wrapper {
+    display: block;
+    overflow-y: scroll;
+  }
+  .split-screen-half {
+    height: 100vh;
+  }
 }
 </style>
