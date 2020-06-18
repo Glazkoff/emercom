@@ -8,7 +8,7 @@
 import AdminPanel from "@/components/AdminPanel.vue";
 export default {
   components: {
-    AdminPanel
+    AdminPanel,
   },
   methods: {},
   // При создании прииложения задаются системныее переменные и проверяется авторизация
@@ -33,7 +33,7 @@ export default {
     if (!token && this.$route.path !== "/login") {
       this.$router.push("/login");
     }
-  }
+  },
 };
 </script>
 <style>
@@ -296,5 +296,73 @@ table {
 .users-list {
   width: 100%;
   overflow-x: auto;
+}
+#side-panel .switch-btn {
+  display: none;
+}
+@media screen and (max-width: 830px) {
+  .main-screen {
+    position: fixed;
+    left: -100vw;
+    top: 0;
+    display: grid;
+    grid-template-columns: 100vw 100vw !important;
+    grid-template-rows: 1fr !important;
+  }
+  #side-panel {
+    position: relative;
+    /* position: fixed;
+    top: 0; */
+    /* left: -10rem; */
+  }
+  #side-panel .switch-btn {
+    display: block;
+    position: absolute;
+    right: -100vw;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    z-index: 9999;
+    color: #fff;
+    background-color: #0c2461;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.4);
+  }
+  .side-panel-open {
+    position: relative;
+    left: 100vw;
+    top: 0;
+    z-index: 9998;
+  }
+  #side-panel.side-panel-open .switch-btn {
+    right: 0px;
+  }
+  .main {
+    max-width: 100vw !important;
+    width: 96% !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto auto auto auto auto !important;
+    grid-gap: 1fr;
+  }
+  .main.main-panel.main-panel-nonscroll {
+    overflow-y: scroll !important;
+  }
+  .requests-wrap,
+  .messages-wrap {
+    display: block !important;
+  }
+  .requests-wrap > div:not(:last-child),
+  .messages-wrap > * {
+    margin-right: 0 !important;
+  }
+  .requests-wrap > div,
+  .personal-messages,
+  .common-messages {
+    width: 100% !important;
+  }
+  .find-input {
+    box-sizing: border-box;
+  }
 }
 </style>

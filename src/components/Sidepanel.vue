@@ -1,5 +1,6 @@
 <template>
-  <div id="side-panel">
+  <div id="side-panel" :class="{ 'side-panel-open': menuOpen }">
+    <button class="switch-btn" @click="switchMenu()">Меню</button>
     <div class="logo">
       <div class="logo-img"></div>
       <router-link tag="h1" class="logo-title" to="/"
@@ -73,6 +74,11 @@
 import JWT from "jwt-client";
 export default {
   name: "Sidepanel",
+  data() {
+    return {
+      menuOpen: false,
+    };
+  },
   methods: {
     // Метод выхода из учётной записи
     logout() {
@@ -80,7 +86,10 @@ export default {
       this.$store.dispatch("AUTH_LOGOUT").then(() => {
         this.$router.push("/login");
       });
-    }
+    },
+    switchMenu() {
+      this.menuOpen = !this.menuOpen;
+    },
   },
   computed: {
     // Вычисленное логическое свойство - администратор или нет
@@ -112,8 +121,8 @@ export default {
       } else {
         return false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

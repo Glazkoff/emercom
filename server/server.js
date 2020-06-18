@@ -15,6 +15,7 @@ require("dotenv").config();
 const app = express();
 // const expressWs = require("express-ws")(app);
 
+// Поддержка HTML5 history API
 app.use(history());
 
 // Парсинг json - application/json

@@ -2,14 +2,23 @@
   <div class="main-screen">
     <Sidepanel></Sidepanel>
     <div class="main-panel">
+      <div class="messages-wrap">
+        <input
+          class="find-input"
+          v-model="findString"
+          type="text"
+          placeholder="Поиск по сообщениям"
+        />
+      </div>
       <div class="loading-box" v-if="loading">
         <Loading></Loading>
       </div>
+
       <div class="messages-wrap" v-else>
         <div class="common-messages">
           <h3>Общие оповещения</h3>
           <MessageBox
-            v-for="message in common"
+            v-for="message in filterCommon"
             :key="message.message_id"
             :message="message"
           ></MessageBox>
@@ -17,7 +26,7 @@
         <div class="personal-messages">
           <h3>Личные оповещения</h3>
           <MessageBox
-            v-for="message in personal"
+            v-for="message in filterPersonal"
             :key="message.message_id"
             :message="message"
           ></MessageBox>
@@ -45,7 +54,38 @@ export default {
       common: [],
       personal: [],
       loading: false,
+      findString: "",
     };
+  },
+  computed: {
+    filterCommon() {
+      if (this.findString !== "") {
+        return this.common.filter((el) => {
+          return (
+            (el.title.toLowerCase().indexOf(this.findString.toLowerCase()) !==
+              -1 &&
+              el.title !== "") ||
+            (el.body.toLowerCase().indexOf(this.findString.toLowerCase()) !==
+              -1 &&
+              el.body !== "")
+          );
+        });
+      } else {
+        return this.common;
+      }
+    },
+    filterPersonal() {
+      return this.personal.filter((el) => {
+        return (
+          (el.title.toLowerCase().indexOf(this.findString.toLowerCase()) !==
+            -1 &&
+            el.title !== "") ||
+          (el.body.toLowerCase().indexOf(this.findString.toLowerCase()) !==
+            -1 &&
+            el.body !== "")
+        );
+      });
+    },
   },
   // при рендере компонента загрузка списка оповещений, связанных с пользователем
   async mounted() {
@@ -107,5 +147,11 @@ export default {
   padding-bottom: 0.5rem;
   background-color: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+.find-input {
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  font-size: 1.2rem;
+  width: 100%;
 }
 </style>

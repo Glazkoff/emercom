@@ -1,6 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
-import router from "./router";
+import router from "./router/index";
 import store from "./store";
 import axios from "axios";
 
@@ -11,7 +11,7 @@ axios.interceptors.response.use(
   response => {
     return response;
   },
-  function(error) {
+  function (error) {
     // Do something with response error
     if (error.response.status === 401) {
       console.log("unauthorized, logging out ...");
