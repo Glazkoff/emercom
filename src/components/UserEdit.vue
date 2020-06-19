@@ -188,7 +188,7 @@ export default {
   name: "UserEdit",
   components: {
     Sidepanel,
-    Loading
+    Loading,
   },
   data() {
     return {
@@ -204,8 +204,8 @@ export default {
         fio: "",
         role: "responsible",
         login: "",
-        password: ""
-      }
+        password: "",
+      },
     };
   },
   methods: {
@@ -230,24 +230,25 @@ export default {
     // Изменить запись в базе данных о пользователе
     sendEditUser() {
       this.userLoading = true;
-      let urlPath = process.env.VUE_APP_API_URL+"/users/" + this.editUser.user_id;
+      let urlPath =
+        process.env.VUE_APP_API_URL + "/users/" + this.editUser.user_id;
       let sendUser = {
         fio: this.editUser.fio,
         role: this.editUser.role,
         login: this.editUser.login,
-        department_id: this.editUser.department_id
+        department_id: this.editUser.department_id,
       };
       if (this.editUser.password) {
         urlPath += "?changepassword=true";
         sendUser.password = this.editUser.password;
       }
       axios.put(urlPath, sendUser).then(
-        res => {
+        (res) => {
           console.log(res);
           this.userLoading = false;
           this.userSuccess = true;
         },
-        err => {
+        (err) => {
           this.userLoading = false;
           console.log("Main. Error: ", err);
           this.userError = true;
@@ -268,21 +269,22 @@ export default {
         fio: "",
         role: "responsible",
         login: "",
-        password: ""
+        password: "",
       };
     },
     // Удалить пользователя
     deleteUser() {
       this.userLoading = true;
-      let urlPath = process.env.VUE_APP_API_URL+"/users/" + this.editUser.user_id;
+      let urlPath =
+        process.env.VUE_APP_API_URL + "/users/" + this.editUser.user_id;
       axios.delete(urlPath).then(
-        res => {
+        (res) => {
           console.log(res);
           this.userLoading = false;
           this.userSuccess = true;
           this.getUsers();
         },
-        err => {
+        (err) => {
           this.userLoading = false;
           console.log("Main. Error: ", err);
           this.userError = true;
@@ -296,16 +298,16 @@ export default {
         role: this.editUser.role,
         login: this.editUser.login,
         password: this.editUser.password,
-        department_id: this.editUser.department_id
+        department_id: this.editUser.department_id,
       };
-      axios.post(process.env.VUE_APP_API_URL+"/register", sendUser).then(
-        res => {
+      axios.post(process.env.VUE_APP_API_URL + "/register", sendUser).then(
+        (res) => {
           console.log(res);
           this.userLoading = false;
           this.userSuccess = true;
           this.getUsers();
         },
-        err => {
+        (err) => {
           this.userLoading = false;
           console.log("Main. Error: ", err);
           this.userError = true;
@@ -316,26 +318,26 @@ export default {
     getUsers() {
       this.loading = true;
       this.users = [];
-      axios.get(process.env.VUE_APP_API_URL+"/users").then(
-        res => {
-          res.data.forEach(el => {
+      axios.get(process.env.VUE_APP_API_URL + "/users").then(
+        (res) => {
+          res.data.forEach((el) => {
             this.users.push(el);
           });
           this.loading = false;
         },
-        err => {
+        (err) => {
           console.log("Main. Error: ", err);
           this.loading = false;
         }
       );
-    }
+    },
   },
   // При рендере компонента в браузере загрузить список пользователей
   async mounted() {
     let block = document.querySelector(".nav-wrapper");
     block.scrollTop = block.scrollHeight;
     this.getUsers();
-  }
+  },
 };
 </script>
 

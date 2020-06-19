@@ -181,7 +181,7 @@
                 <input
                   type="text"
                   id="new_device.characteristics"
-                  placeholder="Название устройства"
+                  placeholder="Характеристики устройства"
                   v-model="new_device.characteristics"
                 />
                 <!-- <small>Добавлено автоматически</small> -->
@@ -287,14 +287,16 @@ export default {
     sendDevice() {
       this.new_device.department_id = this.department_id;
       console.log("Новое устройтсво", this.new_device);
-      axios.post(process.env.VUE_APP_API_URL+"/devices", this.new_device).then(
-        (res) => {
-          console.log(res);
-        },
-        (err) => {
-          console.log("Write. Error: ", err);
-        }
-      );
+      axios
+        .post(process.env.VUE_APP_API_URL + "/devices", this.new_device)
+        .then(
+          (res) => {
+            console.log(res);
+          },
+          (err) => {
+            console.log("Write. Error: ", err);
+          }
+        );
       this.modal = false;
       this.getDevices();
     },
@@ -335,7 +337,7 @@ export default {
           }
         });
       }
-      axios.post(process.env.VUE_APP_API_URL+"/requests", req).then(
+      axios.post(process.env.VUE_APP_API_URL + "/requests", req).then(
         (res) => {
           console.log(res);
           if (res.status == 200) {
@@ -360,7 +362,7 @@ export default {
     getDevices() {
       this.department_devices = [];
       this.devicesLoading = true;
-      axios.get(process.env.VUE_APP_API_URL+"/devices").then(
+      axios.get(process.env.VUE_APP_API_URL + "/devices").then(
         (res) => {
           res.data.forEach((el) => {
             el.comment = "";
