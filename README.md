@@ -1,5 +1,11 @@
 # Проект "Система заявок в IT-отдел регионального ГУ МЧС России"
 
+## Чтобы запустить
+Необходимо иметь Node.js и npm на компьютере!
+- Клонируете репозиторий
+- npm install
+- node ./server/server.js
+
 ## Видеодемонстрация работы
 [Видео](https://drive.google.com/open?id=11tBOXjMMcPBHt3ysiJKsD7VOPJ7nMzpT)
 
